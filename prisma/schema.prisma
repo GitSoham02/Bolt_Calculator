@@ -1,0 +1,40 @@
+// generator client {
+//   provider = "prisma-client"
+//   output   = "../app/generated/prisma"
+// }
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+  previewFeatures = ["driverAdapters"]
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Bolts {
+  id                 Int      @id @default(autoincrement())
+  designation        String   @unique
+  nominalDiameter    Float
+  threadMeanDiameter Float
+  tensileStressArea  Float
+  createdAt          DateTime @default(now())
+}
+
+model PropertyClasses {
+  id        Int      @id @default(autoincrement())
+  className String
+  xValue    Float
+  yValue    Float
+  createdAt DateTime @default(now())
+}
+
+model StrengthLimits {
+  id              Int      @id @default(autoincrement())
+  ultimateTensile Int
+  yieldStrength   Int
+  tensileStress   Int
+  shearStress     Int
+  bearingStress   Int
+  createdAt       DateTime @default(now())
+}

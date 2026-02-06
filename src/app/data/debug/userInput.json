@@ -1,0 +1,9 @@
+{
+  "plateThickness": 1,
+  "externalLoad": 2,
+  "preLoad": 2,
+  "lateralLoad": 3,
+  "engagedThreadLength": 4,
+  "tensileStressArea": 4,
+  "youngsModulus": 6
+}
