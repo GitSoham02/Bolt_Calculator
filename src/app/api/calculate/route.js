@@ -30,11 +30,11 @@ export async function POST(req) {
     const result = await boltAnalysis(input);
     return NextResponse.json(result);
 
-    // 5. Respond back to frontend
-    return NextResponse.json({
-      message: 'Input received and stored for debugging',
-      input,
-    });
+    // // 5. Respond back to frontend
+    // return NextResponse.json({
+    //   message: 'Input received and stored for debugging',
+    //   input,
+    // });
   } catch (error) {
     // 6. Fail safely
     return NextResponse.json(

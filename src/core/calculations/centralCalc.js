@@ -5,6 +5,7 @@ export default function centralCalculations(
 ) {
   // 1. caclulation phase 1: pre calculations
   // 2. Main calculations
+  userData = { youngsModulus: 21000, ...userData };
 
   const preCalcResults = preCalculation(userData, curBolt, curBoltProperty);
 

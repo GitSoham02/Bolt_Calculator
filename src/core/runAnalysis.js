@@ -56,8 +56,18 @@ const propertyGrades = [
 ];
 
 // const limits = [];
+// sample data
+// const userData = {
+//   plateThickness: 16,
+//   externalLoad: 12000,
+//   preLoad: 20000,
+//   lateralLoad: 500,
+//   engagedThreadLength: 8,
+//   // tensileStressArea: 58,
+//   // youngsModulus: 21000,
+// };
 
-export default async function boltAnalysis() {
+export default async function boltAnalysis(userData) {
   for (let boltIndex = 0; boltIndex < boltNames.length; boltIndex++) {
     const curBolt = await getBoltByDesignation(boltNames[boltIndex]);
 
@@ -69,21 +79,8 @@ export default async function boltAnalysis() {
       console.log(curBolt);
       console.log(curBoltProperty);
 
-      // sample data
-      const userData = {
-        plateThickness: 16,
-        externalLoad: 12000,
-        preLoad: 20000,
-        lateralLoad: 500,
-        engagedThreadLength: 8,
-        tensileStressArea: 58,
-        youngsModulus: 21000,
-      };
-
       // call central calculation
       const result = centralCalculations(userData, curBolt, curBoltProperty);
-      // console.log('-------------------------');
-      // console.log(result);
 
       const obtainedValues = result.obtainedValues;
       const limits = result.limitResults;
@@ -97,15 +94,10 @@ export default async function boltAnalysis() {
       if (passResult == true) {
         console.log(limits);
         console.log(obtainedValues);
+
         return { curBolt, curBoltProperty, limits, obtainedValues };
-        // finalBolt = curBolt;
-        // finalProp = curBoltProperty;
-        // break;
       }
     }
   }
-  // console.log(finalBolt);
-  // console.log(finalProp);
-  // return { finalBolt, finalProp };
 }
 boltAnalysis();

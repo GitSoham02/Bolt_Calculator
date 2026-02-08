@@ -36,12 +36,12 @@ const formSchema = z.object({
   engagedThreadLength: z.coerce.number().positive({
     message: 'Engaged thread length must be a positive number.',
   }),
-  tensileStressArea: z.coerce.number().positive({
-    message: 'Tensile stress area must be a positive number.',
-  }),
-  youngsModulus: z.coerce.number().positive({
-    message: "Young's modulus must be a positive number.",
-  }),
+  // tensileStressArea: z.coerce.number().positive({
+  //   message: 'Tensile stress area must be a positive number.',
+  // }),
+  // youngsModulus: z.coerce.number().positive({
+  //   message: "Young's modulus must be a positive number.",
+  // }),
 });
 
 export function ProfileForm({ onSubmitForm }) {
@@ -54,8 +54,8 @@ export function ProfileForm({ onSubmitForm }) {
       preLoad: '',
       lateralLoad: '',
       engagedThreadLength: '',
-      tensileStressArea: '',
-      youngsModulus: '',
+      // tensileStressArea: '',
+      // youngsModulus: '',
     },
   });
 
@@ -111,7 +111,7 @@ export function ProfileForm({ onSubmitForm }) {
         />
         <Separator className="bg-gray-300" />
 
-        <div className="flex flex-col gap-3">
+        <div className="flex flex-col gap-3 space-y-3">
           {/* External load */}
           <FormField
             control={control}
@@ -230,7 +230,7 @@ export function ProfileForm({ onSubmitForm }) {
           />
 
           {/* Tensile Stress Area (A't) */}
-          <FormField
+          {/* <FormField
             control={control}
             name="tensileStressArea"
             render={({ field }) => (
@@ -255,10 +255,10 @@ export function ProfileForm({ onSubmitForm }) {
                 <FormMessage />
               </FormItem>
             )}
-          />
+          /> */}
 
           {/* Young's Modulus */}
-          <FormField
+          {/* <FormField
             control={control}
             name="youngsModulus"
             render={({ field }) => (
@@ -287,7 +287,7 @@ export function ProfileForm({ onSubmitForm }) {
                 <FormMessage />
               </FormItem>
             )}
-          />
+          /> */}
         </div>
 
         <div className="flex flex-col sm:flex-row gap-4 sm:gap-10 justify-center">
