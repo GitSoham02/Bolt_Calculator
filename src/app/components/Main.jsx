@@ -1,7 +1,8 @@
 'use client';
+
 function Main({ children }) {
   return (
-    <div className="max-w-full self-center min-h-screen p-4 sm:p-5 py-6 sm:py-10 flex flex-col items-center gap-8 sm:gap-12 lg:gap-20">
+    <div className="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 min-h-screen transition-colors duration-200">
       {children}
     </div>
   );
