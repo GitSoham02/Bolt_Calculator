@@ -70,8 +70,8 @@ export default function HomePage() {
     <>
       <div className="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 selection:bg-primary/20">
         {/* Navigation */}
-        <nav className="fixed top-0 left-0 right-0 z-50 border-b border-border-light dark:border-border-dark bg-surface-light/80 dark:bg-surface-dark/80 backdrop-blur-md">
-          <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between w-full">
+        <nav className="fixed top-0 left-0 right-0 z-50 border-b border-border-light dark:border-border-dark bg-surface-light dark:bg-surface-dark md:bg-surface-light/80 md:dark:bg-surface-dark/80 backdrop-blur-none md:backdrop-blur-md">
+          <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-start md:justify-between w-full">
             <div className="flex items-center gap-3 shrink-0">
               <div className="bg-primary p-1.5 rounded-lg flex items-center justify-center">
                 <span
@@ -112,7 +112,7 @@ export default function HomePage() {
         </nav>
 
         {/* Hero Section */}
-        <section className="relative pt-32 pb-20 overflow-hidden min-h-[90vh] flex items-center mt-20">
+        <section className="relative pt-2 pb-20 overflow-hidden min-h-[90vh] flex items-center mt-10">
           <div className="absolute inset-0 engineering-grid -z-10"></div>
           <div className="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-12 items-center w-full">
             <div className="space-y-8 animate-fade-in-up">

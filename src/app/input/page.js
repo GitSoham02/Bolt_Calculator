@@ -3,6 +3,8 @@
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import ProgressBar from '../components/ProgressBar';
+import NavBar from '../components/NavBar';
+import InfoTooltip from '../components/InfoTooltip';
 import { useResult } from '../context/ResultContext';
 import { useState } from 'react';
 
@@ -88,7 +90,7 @@ export default function InputPage() {
             </span>
           </div>
           <span className="font-bold text-lg tracking-tight">
-            BoltCalc<span className="text-primary">Pro</span>
+            Bolt<span className="text-primary">Calculator</span>
           </span>
         </div>
 
@@ -171,29 +173,10 @@ export default function InputPage() {
       {/* Main Content */}
       <main className="flex-1 flex flex-col min-w-0 overflow-y-auto">
         {/* Header */}
-        <header className="h-16 border-b border-border-light dark:border-border-dark bg-surface-light/80 dark:bg-surface-dark/80 backdrop-blur-md flex items-center justify-between px-4 sm:px-6 md:px-8 sticky top-0 z-10">
-          <div className="flex items-center gap-2">
-            <button
-              className="lg:hidden material-icons-round text-slate-600 dark:text-slate-400 mr-2"
-              onClick={() =>
-                document
-                  .getElementById('mobile-menu')
-                  .classList.toggle('hidden')
-              }
-            >
-              menu
-            </button>
-            <h1 className="text-sm sm:text-base md:text-xl font-semibold text-slate-800 dark:text-slate-100 leading-none">
-              Industrial Bolt Load Calculator
-            </h1>
-            <span className="hidden sm:inline-block px-2 py-0.5 bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-400 text-[10px] font-bold rounded uppercase tracking-widest">
-              v2.4.0
-            </span>
-          </div>
-        </header>
+        <NavBar />
 
         {/* Form Content */}
-        <div className="p-4 sm:p-6 md:p-8 max-w-6xl mx-auto w-full">
+        <div className="p-4 sm:p-6 mt-2 md:p-8 max-w-6xl mx-auto w-full">
           <div className="mb-8">
             <h2 className="text-lg font-medium text-slate-900 dark:text-slate-100">
               Design Parameters
@@ -220,12 +203,15 @@ export default function InputPage() {
                   <div className="group">
                     <label className="flex items-center justify-between text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
                       <span>Plate Thickness</span>
-                      <span
-                        className="material-icons-round text-slate-400 text-sm cursor-help hover:text-primary transition-colors"
-                        title="The combined thickness of the plates being joined."
-                      >
-                        info
-                      </span>
+                      <InfoTooltip>
+                        Thickness of the clamped member stack contributing to
+                        joint stiffness.
+                        <br />
+                        Used for calculating member stiffness and load
+                        distribution between bolt and plates.
+                        <br />
+                        Use effective grip length, not nominal plate size.
+                      </InfoTooltip>
                     </label>
                     <div className="relative">
                       <input
@@ -247,12 +233,14 @@ export default function InputPage() {
                   <div className="group">
                     <label className="flex items-center justify-between text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
                       <span>Engaged Thread Length (L&apos;e)</span>
-                      <span
-                        className="material-icons-round text-slate-400 text-sm cursor-help hover:text-primary transition-colors"
-                        title="Length of the bolt thread that is actively engaged."
-                      >
-                        info
-                      </span>
+                      <InfoTooltip>
+                        Effective length of threads engaged in the nut or tapped
+                        hole.
+                        <br />
+                        Used for thread stripping and load-sharing checks.
+                        <br />
+                        Excludes run-out and incomplete threads.
+                      </InfoTooltip>
                     </label>
                     <div className="relative">
                       <input
@@ -285,12 +273,15 @@ export default function InputPage() {
                   <div className="group">
                     <label className="flex items-center justify-between text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
                       <span>External Load</span>
-                      <span
-                        className="material-icons-round text-slate-400 text-sm cursor-help hover:text-primary transition-colors"
-                        title="Maximum external tensile load applied."
-                      >
-                        info
-                      </span>
+                      <InfoTooltip>
+                        Axial service load applied to the joint after
+                        tightening.
+                        <br />
+                        Assumed to act in tension unless stated otherwise.
+                        <br />
+                        Used to compute additional bolt load based on joint
+                        stiffness ratio.
+                      </InfoTooltip>
                     </label>
                     <div className="relative">
                       <input
@@ -312,12 +303,15 @@ export default function InputPage() {
                   <div className="group">
                     <label className="flex items-center justify-between text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
                       <span>Preload (Fi)</span>
-                      <span
-                        className="material-icons-round text-slate-400 text-sm cursor-help hover:text-primary transition-colors"
-                        title="Initial tightening force of the bolt."
-                      >
-                        info
-                      </span>
+                      <InfoTooltip>
+                        Initial tensile force induced in the bolt during
+                        tightening.
+                        <br />
+                        Typically derived from torque–tension relation or
+                        recommended preload percentage of proof load.
+                        <br />
+                        Critical for joint separation and fatigue checks.
+                      </InfoTooltip>
                     </label>
                     <div className="relative">
                       <input
@@ -339,12 +333,15 @@ export default function InputPage() {
                   <div className="group">
                     <label className="flex items-center justify-between text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
                       <span>Lateral Load</span>
-                      <span
-                        className="material-icons-round text-slate-400 text-sm cursor-help hover:text-primary transition-colors"
-                        title="Shear load acting perpendicular to bolt axis."
-                      >
-                        info
-                      </span>
+                      <InfoTooltip>
+                        Transverse shear load acting parallel to the joint
+                        interface.
+                        <br />
+                        Used for slip, bearing, or shear failure checks
+                        depending on joint type (friction-grip or bearing-type).
+                        <br />
+                        Assumed uniformly distributed unless specified.
+                      </InfoTooltip>
                     </label>
                     <div className="relative">
                       <input
@@ -411,7 +408,7 @@ export default function InputPage() {
                         readOnly
                         step="0.1"
                         type="number"
-                        value="1.5"
+                        value="2.0"
                       />
                       <span className="absolute right-4 top-1/2 -translate-y-1/2 text-xs font-mono text-slate-400 bg-slate-100 dark:bg-slate-700 px-1.5 py-0.5 rounded">
                         ratio
@@ -429,7 +426,7 @@ export default function InputPage() {
                         className="w-full bg-slate-200/50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-lg px-4 py-2.5 text-sm text-slate-500 dark:text-slate-400 appearance-none cursor-not-allowed"
                         disabled
                       >
-                        <option>ISO 8.8 (Carbon Steel)</option>
+                        <option>ISO (Carbon Steel)</option>
                         <option defaultValue>ISO 10.9 (Alloy Steel)</option>
                         <option>ISO 12.9 (High Tensile)</option>
                         <option>A2-70 (Stainless Steel)</option>
@@ -500,122 +497,6 @@ export default function InputPage() {
           </div>
         </footer>
       </main>
-
-      {/* Mobile Sidebar Overlay */}
-      <div
-        id="mobile-menu"
-        className="hidden lg:hidden fixed inset-0 z-50 bg-black/50"
-        onClick={(e) => e.currentTarget.classList.add('hidden')}
-      >
-        <aside
-          className="w-64 h-full bg-surface-light dark:bg-surface-dark flex flex-col"
-          onClick={(e) => e.stopPropagation()}
-        >
-          <div className="p-6 flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="bg-primary p-2 rounded-lg flex items-center justify-center">
-                <span className="material-symbols-outlined text-white text-2xl">
-                  hardware
-                </span>
-              </div>
-              <span className="font-bold text-lg tracking-tight">
-                BoltCalc<span className="text-primary">Pro</span>
-              </span>
-            </div>
-            <button
-              className="material-icons-round text-slate-600 dark:text-slate-400"
-              onClick={() =>
-                document.getElementById('mobile-menu').classList.add('hidden')
-              }
-            >
-              close
-            </button>
-          </div>
-
-          <nav className="flex-1 px-4 py-4 space-y-1 overflow-y-auto">
-            <div className="text-xs font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-wider px-3 mb-2">
-              Navigation
-            </div>
-            <Link
-              className="flex items-center gap-3 px-3 py-2 text-sm font-medium text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors rounded-md"
-              href="/"
-              onClick={() =>
-                document.getElementById('mobile-menu').classList.add('hidden')
-              }
-            >
-              <span className="material-icons-round text-[20px]">home</span>
-              Home
-            </Link>
-
-            <div className="pt-4 text-xs font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-wider px-3 mb-2">
-              Calculators
-            </div>
-            <Link
-              className="flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-md bg-primary/10 text-primary border-r-2 border-primary"
-              href="/input"
-              onClick={() =>
-                document.getElementById('mobile-menu').classList.add('hidden')
-              }
-            >
-              <span className="material-icons-round text-[20px]">bolt</span>
-              Load Calculator
-            </Link>
-            <a
-              className="flex items-center gap-3 px-3 py-2 text-sm font-medium text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors rounded-md"
-              href="#"
-            >
-              <span className="material-icons-round text-[20px]">
-                architecture
-              </span>
-              Torque Specs
-            </a>
-            <a
-              className="flex items-center gap-3 px-3 py-2 text-sm font-medium text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors rounded-md"
-              href="#"
-            >
-              <span className="material-icons-round text-[20px]">history</span>
-              History
-            </a>
-
-            <div className="pt-8 text-xs font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-wider px-3 mb-2">
-              Library
-            </div>
-            <a
-              className="flex items-center gap-3 px-3 py-2 text-sm font-medium text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors rounded-md"
-              href="#"
-            >
-              <span className="material-icons-round text-[20px]">
-                menu_book
-              </span>
-              ASTM Standards
-            </a>
-            <a
-              className="flex items-center gap-3 px-3 py-2 text-sm font-medium text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors rounded-md"
-              href="#"
-            >
-              <span className="material-icons-round text-[20px]">
-                inventory_2
-              </span>
-              Material DB
-            </a>
-          </nav>
-
-          <div className="p-4 border-t border-border-light dark:border-border-dark">
-            <button
-              className="flex items-center gap-3 w-full px-3 py-2 text-sm font-medium text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-md transition-colors"
-              onClick={toggleDarkMode}
-            >
-              <span className="material-icons-round text-[20px] dark:hidden">
-                dark_mode
-              </span>
-              <span className="material-icons-round text-[20px] hidden dark:block">
-                light_mode
-              </span>
-              Theme Toggle
-            </button>
-          </div>
-        </aside>
-      </div>
     </div>
   );
 }
