@@ -2,19 +2,44 @@
 
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useResult } from '@/app/context/ResultContext';
 import { Superscript } from 'lucide-react';
 
 export default function HistoryReportPage() {
   const router = useRouter();
   const [isExporting, setIsExporting] = useState(false);
+  const [bolt, setBolt] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   const { historyIndex } = useResult();
 
-  const storedData = localStorage.getItem('boltResultHistory');
-  const boltHistoryData = JSON.parse(storedData) || [];
-  const bolt = boltHistoryData[historyIndex];
+  // Fetch bolt data from localStorage on client side only
+  useEffect(() => {
+    setIsLoading(true);
+    try {
+      const storedData = localStorage.getItem('boltResultHistory');
+      const boltHistoryData = JSON.parse(storedData) || [];
+      setBolt(boltHistoryData[historyIndex]);
+    } catch (error) {
+      console.error('Error loading bolt data:', error);
+      setBolt(null);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [historyIndex]);
+
+  // Show loading state
+  if (isLoading) {
+    return (
+      <div className="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+          <p className="text-slate-500">Loading report...</p>
+        </div>
+      </div>
+    );
+  }
 
   // Redirect if no bolt data found
   if (bolt === undefined || bolt === null) {
