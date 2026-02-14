@@ -1,23 +1,51 @@
 export default function boltSelection(obtainedValues, limits) {
-  // tensile stress check
-  if (limits.tensileStress < obtainedValues.tensileStress) return false;
+  console.log('[selectBolt] Checking bolt selection criteria...');
+  console.log('[selectBolt] Obtained values:', obtainedValues);
+  console.log('[selectBolt] Limits:', limits);
 
-  // shear stress check
-  if (limits.shearStess < obtainedValues.shearStress) return false;
+  try {
+    // tensile stress check
+    if (limits.tensileStress < obtainedValues.tensileStress) {
+      console.log('[selectBolt] ✗ Failed: tensile stress check');
+      return false;
+    }
 
-  //   plate bearing stress check
-  if (limits.plateBearingStess < obtainedValues.plateBearingStess) return false;
+    // shear stress check
+    if (limits.shearStess < obtainedValues.shearStress) {
+      console.log('[selectBolt] ✗ Failed: shear stress check');
+      return false;
+    }
 
-  // thread shear stress check
-  if (limits.threadShearStess < obtainedValues.threadShearStess) return false;
+    //   plate bearing stress check
+    if (limits.plateBearingStess < obtainedValues.plateBearingStess) {
+      console.log('[selectBolt] ✗ Failed: plate bearing stress check');
+      return false;
+    }
 
-  // pre load check
-  if (limits.preLoad < obtainedValues.preLoad) return false;
+    // thread shear stress check
+    if (limits.threadShearStess < obtainedValues.threadShearStess) {
+      console.log('[selectBolt] ✗ Failed: thread shear stress check');
+      return false;
+    }
 
-  //   separation load check
-  if (limits.separationLoad > obtainedValues.separationLoad) return false;
+    // pre load check
+    if (limits.preLoad < obtainedValues.preLoad) {
+      console.log('[selectBolt] ✗ Failed: pre load check');
+      return false;
+    }
 
-  return true;
+    //   separation load check
+    if (limits.separationLoad > obtainedValues.separationLoad) {
+      console.log('[selectBolt] ✗ Failed: separation load check');
+      return false;
+    }
+
+    console.log('[selectBolt] ✓ All criteria passed!');
+    return true;
+  } catch (error) {
+    console.error('[selectBolt] Error during selection:', error);
+    throw error;
+  }
 }
 
 // {

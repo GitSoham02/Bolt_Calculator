@@ -3,27 +3,46 @@ export default function centralCalculations(
   curBolt,
   curBoltProperty,
 ) {
-  // 1. caclulation phase 1: pre calculations
-  // 2. Main calculations
-  userData = { youngsModulus: 21000, ...userData };
-
-  const preCalcResults = preCalculation(userData, curBolt, curBoltProperty);
-
-  const mainResults = mainCalculation(
+  console.log('[centralCalc] Starting calculations...');
+  console.log('[centralCalc] Input data:', {
     userData,
-    curBolt,
-    curBoltProperty,
-    preCalcResults,
-  );
+    boltDesignation: curBolt?.designation,
+    propertyClass: curBoltProperty?.className,
+  });
 
-  const obtainedValues = {
-    ...mainResults,
-    preLoad: userData.preLoad,
-  };
+  try {
+    // 1. caclulation phase 1: pre calculations
+    // 2. Main calculations
+    userData = { youngsModulus: 21000, ...userData };
 
-  const limitResults = limitCalculation(userData, curBolt, preCalcResults);
+    console.log('[centralCalc] Running pre-calculations...');
+    const preCalcResults = preCalculation(userData, curBolt, curBoltProperty);
+    console.log('[centralCalc] Pre-calculations complete');
 
-  return { obtainedValues, limitResults };
+    console.log('[centralCalc] Running main calculations...');
+    const mainResults = mainCalculation(
+      userData,
+      curBolt,
+      curBoltProperty,
+      preCalcResults,
+    );
+    console.log('[centralCalc] Main calculations complete');
+
+    const obtainedValues = {
+      ...mainResults,
+      preLoad: userData.preLoad,
+    };
+
+    console.log('[centralCalc] Running limit calculations...');
+    const limitResults = limitCalculation(userData, curBolt, preCalcResults);
+    console.log('[centralCalc] Calculations finished successfully');
+
+    return { obtainedValues, limitResults };
+  } catch (error) {
+    console.error('[centralCalc] Error during calculations:', error);
+    console.error('[centralCalc] Error stack:', error.stack);
+    throw error;
+  }
 }
 
 function limitCalculation(userData, curBolt, preCalcResults) {

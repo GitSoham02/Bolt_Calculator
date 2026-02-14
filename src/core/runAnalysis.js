@@ -1,8 +1,6 @@
 // The orchestrator file
 
 import 'dotenv/config';
-import { mkdir, writeFile } from 'fs/promises';
-import path from 'path';
 import { getAllBolts, getBoltByDesignation } from '../../lib/bolts.repo.js';
 import {
   getAllPropertyClasses,
@@ -70,51 +68,75 @@ const propertyGrades = [
 // };
 
 export default async function boltAnalysis(userData) {
-  for (let boltIndex = 0; boltIndex < boltNames.length; boltIndex++) {
-    const curBolt = await getBoltByDesignation(boltNames[boltIndex]);
+  console.log('[runAnalysis] Starting bolt analysis with userData:', userData);
 
-    for (let propIndex = 0; propIndex < propertyGrades.length; propIndex++) {
-      const curBoltProperty = await getPropertyClassByName(
-        propertyGrades[propIndex],
-      );
+  try {
+    for (let boltIndex = 0; boltIndex < boltNames.length; boltIndex++) {
+      console.log(`[runAnalysis] Checking bolt: ${boltNames[boltIndex]}`);
 
-      console.log(curBolt);
-      console.log(curBoltProperty);
+      const curBolt = await getBoltByDesignation(boltNames[boltIndex]);
+      if (!curBolt) {
+        console.error(
+          `[runAnalysis] Failed to get bolt: ${boltNames[boltIndex]}`,
+        );
+        continue;
+      }
 
-      // call central calculation
-      const result = centralCalculations(userData, curBolt, curBoltProperty);
+      for (let propIndex = 0; propIndex < propertyGrades.length; propIndex++) {
+        console.log(
+          `[runAnalysis] Checking property grade: ${propertyGrades[propIndex]}`,
+        );
 
-      const obtainedValues = result.obtainedValues;
-      const limits = result.limitResults;
+        const curBoltProperty = await getPropertyClassByName(
+          propertyGrades[propIndex],
+        );
+        if (!curBoltProperty) {
+          console.error(
+            `[runAnalysis] Failed to get property class: ${propertyGrades[propIndex]}`,
+          );
+          continue;
+        }
 
-      // call selection logic
-      const passResult = boltSelection(obtainedValues, limits);
-      console.log('-------------------------');
+        console.log('[runAnalysis] Current bolt:', curBolt.designation);
+        console.log(
+          '[runAnalysis] Current property:',
+          curBoltProperty.className,
+        );
 
-      console.log(passResult);
+        // call central calculation
+        console.log('[runAnalysis] Running central calculations...');
+        const result = centralCalculations(userData, curBolt, curBoltProperty);
 
-      if (passResult == true) {
-        console.log(limits);
-        console.log(obtainedValues);
+        const obtainedValues = result.obtainedValues;
+        const limits = result.limitResults;
+        console.log(
+          '[runAnalysis] Calculations complete. Testing selection logic...',
+        );
 
-        const storedValue = {
-          userData,
-          curBolt,
-          curBoltProperty,
-          obtainedValues,
-          limits,
-        };
-        const outputDir = path.join(process.cwd(), 'src', 'core', 'data');
-        const outputPath = path.join(outputDir, 'storedValue.json');
+        // call selection logic
+        const passResult = boltSelection(obtainedValues, limits);
+        console.log('[runAnalysis] Pass result:', passResult);
+        console.log('-------------------------');
 
-        await mkdir(outputDir, { recursive: true });
-        await writeFile(outputPath, JSON.stringify(storedValue, null, 2));
+        if (passResult == true) {
+          console.log('[runAnalysis] ✓ Suitable bolt found!');
+          console.log('[runAnalysis] Limits:', limits);
+          console.log('[runAnalysis] Obtained values:', obtainedValues);
+          console.log('[runAnalysis] Analysis complete');
 
-        return { curBolt, curBoltProperty, limits, obtainedValues };
+          return { curBolt, curBoltProperty, limits, obtainedValues };
+        }
       }
     }
-  }
 
-  // If no bolt passes the criteria, return an error response
-  throw new Error('No suitable bolt found for the given parameters');
+    // If no bolt passes the criteria, return an error response
+    console.error(
+      '[runAnalysis] No suitable bolt found for the given parameters',
+    );
+    throw new Error('No suitable bolt found for the given parameters');
+  } catch (error) {
+    console.error('[runAnalysis] Error during analysis:', error);
+    console.error('[runAnalysis] Error stack:', error.stack);
+    throw error;
+  }
 }

@@ -27,7 +27,9 @@ export async function POST(req) {
     // await fs.writeFile(INPUT_FILE, JSON.stringify(input, null, 2), 'utf-8');
 
     // 4. Real result from calculations - uncomment after writing calculation part
+    console.log('[API] Starting bolt analysis with input:', input);
     const result = await boltAnalysis(input);
+    console.log('[API] Bolt analysis completed successfully');
     return NextResponse.json(result);
 
     // // 5. Respond back to frontend
@@ -37,8 +39,11 @@ export async function POST(req) {
     // });
   } catch (error) {
     // 6. Fail safely
+    console.error('[API] Error in calculate route:', error);
+    console.error('[API] Error stack:', error.stack);
+    console.error('[API] Error message:', error.message);
     return NextResponse.json(
-      { error: 'Failed to process this request' },
+      { error: 'Failed to process this request', details: error.message },
       { status: 500 },
     );
   }
