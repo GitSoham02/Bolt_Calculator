@@ -52,7 +52,23 @@ export default function InputPage() {
         body: JSON.stringify(numericData),
       });
 
+      if (!res.ok) {
+        throw new Error(`API returned ${res.status}: ${res.statusText}`);
+      }
+
       const result = await res.json();
+
+      // Validate result has required properties
+      if (
+        !result ||
+        !result.curBolt ||
+        !result.curBoltProperty ||
+        !result.limits ||
+        !result.obtainedValues
+      ) {
+        throw new Error('API response missing required fields');
+      }
+
       setResult(result, userData);
 
       // Navigate to results page after a slight delay
@@ -62,6 +78,7 @@ export default function InputPage() {
       }, 1000);
     } catch (error) {
       console.error('Failed to fetch:', error);
+      alert(`Calculation failed: ${error.message}. Please try again.`);
       setIsLoading(false);
     }
   }

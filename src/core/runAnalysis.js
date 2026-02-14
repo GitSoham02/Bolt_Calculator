@@ -114,5 +114,7 @@ export default async function boltAnalysis(userData) {
       }
     }
   }
+
+  // If no bolt passes the criteria, return an error response
+  throw new Error('No suitable bolt found for the given parameters');
 }
-boltAnalysis();

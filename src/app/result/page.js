@@ -10,6 +10,8 @@ import Image from 'next/image';
 export default function ResultPage() {
   const router = useRouter();
   const { result, clearResult, userInput } = useResult();
+  const [isLoading, setIsLoading] = useState(true);
+  const [hasError, setHasError] = useState(false);
 
   // Generate reference ID once on mount using lazy initialization
   const [refId] = useState(() => Math.floor(Math.random() * 9999));
@@ -34,13 +36,67 @@ export default function ResultPage() {
   }
 
   useEffect(() => {
-    // Redirect to input if no result
-    if (!result) {
-      router.push('/input');
-    }
-  }, [result, router]);
+    // Wait for data to be available
+    const timer = setTimeout(() => {
+      if (!result) {
+        setHasError(true);
+        setIsLoading(false);
+      } else {
+        // Validate that result has all required properties
+        if (
+          !result.curBolt ||
+          !result.curBoltProperty ||
+          !result.limits ||
+          !result.obtainedValues
+        ) {
+          setHasError(true);
+          setIsLoading(false);
+        } else {
+          setIsLoading(false);
+        }
+      }
+    }, 500); // Wait 500ms for result to be set
 
-  if (!result) return null;
+    return () => clearTimeout(timer);
+  }, [result]);
+
+  // Show loading state
+  if (isLoading) {
+    return (
+      <div className="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+          <p className="text-slate-500">Processing calculation...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Show error state
+  if (!result || hasError) {
+    return (
+      <div className="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 min-h-screen flex items-center justify-center">
+        <div className="text-center max-w-md mx-auto">
+          <h2 className="text-2xl font-bold mb-2">
+            Error Processing Calculation
+          </h2>
+          <p className="text-slate-500 mb-6">
+            The calculation could not be completed. Please try again or check
+            your inputs.
+          </p>
+          <button
+            onClick={() => {
+              clearResult();
+              router.push('/input');
+            }}
+            className="bg-primary text-white px-6 py-2 rounded-lg font-semibold hover:bg-primary/90"
+          >
+            Back to Input
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   const {
     curBolt: boltDesc,
