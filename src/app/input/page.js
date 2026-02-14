@@ -4,13 +4,15 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import ProgressBar from '../components/ProgressBar';
 import NavBar from '../components/NavBar';
+import Dashboard from '../components/Dashboard';
 import InfoTooltip from '../components/InfoTooltip';
 import { useResult } from '../context/ResultContext';
 import { useState } from 'react';
 
 export default function InputPage() {
   const router = useRouter();
-  const { setResult, setIsLoading, isLoading } = useResult();
+  const { userInput, setUserInput, setResult, setIsLoading, isLoading } =
+    useResult();
   const [formData, setFormData] = useState({
     plateThickness: '',
     engagedThreadLength: '',
@@ -39,6 +41,9 @@ export default function InputPage() {
       preLoad: parseFloat(formData.preLoad),
       lateralLoad: parseFloat(formData.lateralLoad),
     };
+    const userData = { ...numericData, calculatedAt: Date.now() };
+    console.log(userData);
+    setUserInput(userData);
 
     try {
       const res = await fetch('/api/calculate', {
@@ -48,7 +53,7 @@ export default function InputPage() {
       });
 
       const result = await res.json();
-      setResult(result);
+      setResult(result, userData);
 
       // Navigate to results page after a slight delay
       setTimeout(() => {
@@ -71,104 +76,13 @@ export default function InputPage() {
     });
   };
 
-  const toggleDarkMode = () => {
-    document.documentElement.classList.toggle('dark');
-  };
-
   if (isLoading) {
     return <ProgressBar done={false} />;
   }
 
   return (
     <div className="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 min-h-screen flex fixed inset-0 m-0 p-0 overflow-hidden">
-      {/* Sidebar */}
-      <aside className="w-64 border-r border-border-light dark:border-border-dark bg-surface-light dark:bg-surface-dark hidden lg:flex flex-col h-screen overflow-y-auto">
-        <div className="p-6 flex items-center gap-3">
-          <div className="bg-primary p-2 rounded-lg flex items-center justify-center">
-            <span className="material-symbols-outlined text-white text-2xl">
-              hardware
-            </span>
-          </div>
-          <span className="font-bold text-lg tracking-tight">
-            Bolt<span className="text-primary">Calculator</span>
-          </span>
-        </div>
-
-        <nav className="flex-1 px-4 py-4 space-y-1">
-          <div className="text-xs font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-wider px-3 mb-2">
-            Navigation
-          </div>
-          <Link
-            className="flex items-center gap-3 px-3 py-2 text-sm font-medium text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors rounded-md"
-            href="/"
-          >
-            <span className="material-icons-round text-[20px]">home</span>
-            Home
-          </Link>
-
-          <div className="pt-4 text-xs font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-wider px-3 mb-2">
-            Calculators
-          </div>
-          <Link
-            className="flex items-center gap-3 px-3 py-2 text-sm font-medium rounded-md bg-primary/10 text-primary border-r-2 border-primary"
-            href="/input"
-          >
-            <span className="material-icons-round text-[20px]">bolt</span>
-            Load Calculator
-          </Link>
-          <a
-            className="flex items-center gap-3 px-3 py-2 text-sm font-medium text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors rounded-md"
-            href="#"
-          >
-            <span className="material-icons-round text-[20px]">
-              architecture
-            </span>
-            Torque Specs
-          </a>
-          <a
-            className="flex items-center gap-3 px-3 py-2 text-sm font-medium text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors rounded-md"
-            href="#"
-          >
-            <span className="material-icons-round text-[20px]">history</span>
-            History
-          </a>
-
-          <div className="pt-8 text-xs font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-wider px-3 mb-2">
-            Library
-          </div>
-          <a
-            className="flex items-center gap-3 px-3 py-2 text-sm font-medium text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors rounded-md"
-            href="#"
-          >
-            <span className="material-icons-round text-[20px]">menu_book</span>
-            ASTM Standards
-          </a>
-          <a
-            className="flex items-center gap-3 px-3 py-2 text-sm font-medium text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors rounded-md"
-            href="#"
-          >
-            <span className="material-icons-round text-[20px]">
-              inventory_2
-            </span>
-            Material DB
-          </a>
-        </nav>
-
-        <div className="p-4 border-t border-border-light dark:border-border-dark">
-          <button
-            className="flex items-center gap-3 w-full px-3 py-2 text-sm font-medium text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-md transition-colors"
-            onClick={toggleDarkMode}
-          >
-            <span className="material-icons-round text-[20px] dark:hidden">
-              dark_mode
-            </span>
-            <span className="material-icons-round text-[20px] hidden dark:block">
-              light_mode
-            </span>
-            Theme Toggle
-          </button>
-        </div>
-      </aside>
+      <Dashboard />
 
       {/* Main Content */}
       <main className="flex-1 flex flex-col min-w-0 overflow-y-auto">
@@ -454,7 +368,7 @@ export default function InputPage() {
                 <span className="sm:hidden">Reset</span>
               </button>
               <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 sm:gap-4 order-1 sm:order-2">
-                <button
+                {/* <button
                   className="px-4 sm:px-6 py-2.5 text-sm font-semibold text-slate-700 dark:text-slate-300 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 rounded-lg transition-all flex items-center justify-center gap-2"
                   type="button"
                 >
@@ -463,7 +377,7 @@ export default function InputPage() {
                   </span>
                   <span className="hidden sm:inline">Export JSON</span>
                   <span className="sm:hidden">Export</span>
-                </button>
+                </button> */}
                 <button
                   className="px-6 sm:px-10 py-2.5 bg-primary hover:bg-blue-700 text-white font-bold rounded-lg shadow-lg shadow-primary/25 transition-all transform hover:-translate-y-0.5 active:translate-y-0 flex items-center justify-center gap-2"
                   type="submit"

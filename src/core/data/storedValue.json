@@ -1,0 +1,40 @@
+{
+  "userData": {
+    "plateThickness": 16,
+    "engagedThreadLength": 8,
+    "externalLoad": 12000,
+    "preLoad": 20000,
+    "lateralLoad": 500
+  },
+  "curBolt": {
+    "id": 7,
+    "designation": "M8",
+    "nominalDiameter": 8,
+    "threadMeanDiameter": 6.826460821,
+    "tensileStressArea": 36.6,
+    "createdAt": "2026-02-03T04:20:47.422Z"
+  },
+  "curBoltProperty": {
+    "id": 9,
+    "className": "12.9",
+    "xValue": 12,
+    "yValue": 0.9,
+    "createdAt": "2026-02-03T04:20:49.507Z"
+  },
+  "obtainedValues": {
+    "tensileStress": 566.1202185792349,
+    "shearStress": 238.73241463784302,
+    "plateBearingStress": 93.75,
+    "threadShearStress": 120.76867161968845,
+    "separationLoad": 21294.460203814084,
+    "preLoad": 20000
+  },
+  "limits": {
+    "tensileStress": 600,
+    "shearStress": 324,
+    "plateBearingStress": 1080,
+    "threadShearStress": 324,
+    "preLoad": 27669.600000000002,
+    "separationLoad": 12000
+  }
+}

@@ -1,6 +1,8 @@
 // The orchestrator file
 
 import 'dotenv/config';
+import { mkdir, writeFile } from 'fs/promises';
+import path from 'path';
 import { getAllBolts, getBoltByDesignation } from '../../lib/bolts.repo.js';
 import {
   getAllPropertyClasses,
@@ -94,6 +96,19 @@ export default async function boltAnalysis(userData) {
       if (passResult == true) {
         console.log(limits);
         console.log(obtainedValues);
+
+        const storedValue = {
+          userData,
+          curBolt,
+          curBoltProperty,
+          obtainedValues,
+          limits,
+        };
+        const outputDir = path.join(process.cwd(), 'src', 'core', 'data');
+        const outputPath = path.join(outputDir, 'storedValue.json');
+
+        await mkdir(outputDir, { recursive: true });
+        await writeFile(outputPath, JSON.stringify(storedValue, null, 2));
 
         return { curBolt, curBoltProperty, limits, obtainedValues };
       }

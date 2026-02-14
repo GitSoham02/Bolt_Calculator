@@ -1,6 +1,8 @@
 'use client';
 import Link from 'next/link';
 import { useEffect } from 'react';
+import Footer from '../components/Footer';
+import NavBar from '../components/NavBar';
 
 export default function HomePage() {
   // Declare animateCounters before useEffect hooks so it can be used
@@ -69,47 +71,12 @@ export default function HomePage() {
   return (
     <>
       <div className="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 selection:bg-primary/20">
-        {/* Navigation */}
-        <nav className="fixed top-0 left-0 right-0 z-50 border-b border-border-light dark:border-border-dark bg-surface-light dark:bg-surface-dark md:bg-surface-light/80 md:dark:bg-surface-dark/80 backdrop-blur-none md:backdrop-blur-md">
-          <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-start md:justify-between w-full">
-            <div className="flex items-center gap-3 shrink-0">
-              <div className="bg-primary p-1.5 rounded-lg flex items-center justify-center">
-                <span
-                  className="material-symbols-outlined text-white text-2xl"
-                  style={{ fontVariationSettings: "'FILL' 1" }}
-                >
-                  build
-                </span>
-              </div>
-              <span className="font-bold text-xl tracking-tight whitespace-nowrap">
-                Bolt<span className="text-primary">Calculator</span>
-              </span>
-            </div>
-            <div className="hidden md:flex items-center gap-8 text-sm font-medium text-slate-600 dark:text-slate-400 shrink-0">
-              <a
-                className="hover:text-primary transition-colors"
-                href="#features"
-              >
-                Features
-              </a>
-              <a
-                className="hover:text-primary transition-colors"
-                href="#standards"
-              >
-                Standards
-              </a>
-              <a className="hover:text-primary transition-colors" href="#about">
-                About
-              </a>
-              <Link
-                className="bg-primary text-white px-5 py-2.5 rounded-lg hover:bg-blue-700 transition-all duration-300 shadow-md shadow-primary/20 btn-glow transform hover:scale-105"
-                href="/input"
-              >
-                Launch Calculator
-              </Link>
-            </div>
-          </div>
-        </nav>
+        <NavBar
+          variant="horizontal"
+          icon="build"
+          brandName="Bolt"
+          brandHighlight="Calculator"
+        />
 
         {/* Hero Section */}
         <section className="relative pt-2 pb-20 overflow-hidden min-h-[90vh] flex items-center mt-10">
@@ -128,9 +95,11 @@ export default function HomePage() {
                 <span className="text-primary">Critical Engineering</span>
               </h1>
               <p className="text-lg text-slate-600 dark:text-slate-400 max-w-xl leading-relaxed">
-                A comprehensive suite for structural integrity verification.
-                Calculate torque specs, safety factors, and material stresses
-                with ASME &amp; ISO compliant algorithms.
+                Bolt Calculator determines the optimal bolt size and grade for
+                your application based on applied loads and design requirements.
+                It simplifies bolt selection by combining core engineering
+                calculations with design safety principles, while advanced
+                algorithms enhance accuracy and reliability
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
                 <Link
@@ -142,21 +111,21 @@ export default function HomePage() {
                     arrow_forward
                   </span>
                 </Link>
-                <button className="px-8 py-4 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 font-semibold rounded-xl hover:bg-slate-50 dark:hover:bg-slate-700 transition-all flex items-center justify-center gap-2 group">
+                {/* <button className="px-8 py-4 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 font-semibold rounded-xl hover:bg-slate-50 dark:hover:bg-slate-700 transition-all flex items-center justify-center gap-2 group">
                   <span className="material-symbols-outlined group-hover:rotate-12 transition-transform">
                     play_circle
                   </span>
                   Watch Demo
-                </button>
+                </button> */}
               </div>
-              <div className="flex items-center gap-8 pt-4 grayscale opacity-60">
+              {/* <div className="flex items-center gap-8 pt-4 grayscale opacity-60">
                 <span className="text-xs font-bold text-slate-400 uppercase tracking-widest">
                   Compliant with:
                 </span>
                 <span className="font-mono text-sm font-bold">ASME B1.1</span>
                 <span className="font-mono text-sm font-bold">ISO 898-1</span>
                 <span className="font-mono text-sm font-bold">VDI 2230</span>
-              </div>
+              </div> */}
             </div>
             <div className="relative parallax-container animate-float hidden md:block">
               <div className="absolute -inset-10 bg-primary/10 rounded-full blur-[100px] animate-pulse-glow"></div>
@@ -203,7 +172,7 @@ export default function HomePage() {
                   </div>
                 </div>
               </div>
-              <div className="absolute -bottom-4 -left-4 bg-white dark:bg-slate-800 p-4 rounded-xl shadow-lg border border-border-light dark:border-border-dark animate-stagger-2 hidden lg:block">
+              {/* <div className="absolute -bottom-4 -left-4 bg-white dark:bg-slate-800 p-4 rounded-xl shadow-lg border border-border-light dark:border-border-dark animate-stagger-2 hidden lg:block">
                 <div className="flex items-center gap-3">
                   <span className="material-symbols-outlined text-primary">
                     analytics
@@ -215,7 +184,7 @@ export default function HomePage() {
                     <div className="text-sm font-bold">2.45 n</div>
                   </div>
                 </div>
-              </div>
+              </div> */}
             </div>
           </div>
         </section>
@@ -481,152 +450,7 @@ export default function HomePage() {
           </div>
         </section>
       </div>
-      {/* Footer */}
-      <footer className="w-full bg-white dark:bg-background-dark py-20 border-t border-border-light dark:border-border-dark">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="grid md:grid-cols-4 gap-16 mb-20">
-            <div className="col-span-2 space-y-6">
-              <div className="flex items-center gap-3">
-                <div className="bg-primary p-1.5 rounded-lg shadow-lg shadow-primary/20">
-                  <span className="material-symbols-outlined text-white text-xl">
-                    build
-                  </span>
-                </div>
-                <span className="font-bold text-2xl tracking-tight">
-                  Bolt<span className="text-primary">Calculator</span>
-                </span>
-              </div>
-              <p className="text-slate-500 dark:text-slate-400 text-base leading-relaxed max-w-sm">
-                The industrial standard for precision bolt load verification.
-              </p>
-              <div className="flex gap-4">
-                <a
-                  className="w-10 h-10 rounded-full border border-border-light dark:border-border-dark flex items-center justify-center text-slate-400 hover:text-primary hover:border-primary transition-all duration-300"
-                  href="#"
-                >
-                  <span className="material-symbols-outlined text-xl">
-                    share
-                  </span>
-                </a>
-                <a
-                  className="w-10 h-10 rounded-full border border-border-light dark:border-border-dark flex items-center justify-center text-slate-400 hover:text-primary hover:border-primary transition-all duration-300"
-                  href="#"
-                >
-                  <span className="material-symbols-outlined text-xl">
-                    mail
-                  </span>
-                </a>
-              </div>
-            </div>
-            <div>
-              <h4 className="font-bold text-slate-900 dark:text-white mb-6 uppercase tracking-wider text-xs">
-                Resources
-              </h4>
-              <ul className="text-slate-500 dark:text-slate-400 text-sm space-y-4 font-medium">
-                <li>
-                  <a
-                    className="hover:text-primary transition-colors flex items-center gap-2"
-                    href="#"
-                  >
-                    <span className="material-symbols-outlined text-xs">
-                      description
-                    </span>{' '}
-                    Documentation
-                  </a>
-                </li>
-                <li>
-                  <a
-                    className="hover:text-primary transition-colors flex items-center gap-2"
-                    href="#"
-                  >
-                    <span className="material-symbols-outlined text-xs">
-                      api
-                    </span>{' '}
-                    API Reference
-                  </a>
-                </li>
-                <li>
-                  <a
-                    className="hover:text-primary transition-colors flex items-center gap-2"
-                    href="#"
-                  >
-                    <span className="material-symbols-outlined text-xs">
-                      library_books
-                    </span>{' '}
-                    Standards Library
-                  </a>
-                </li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="font-bold text-slate-900 dark:text-white mb-6 uppercase tracking-wider text-xs">
-                Company
-              </h4>
-              <ul className="text-slate-500 dark:text-slate-400 text-sm space-y-4 font-medium">
-                <li>
-                  <a
-                    className="hover:text-primary transition-colors flex items-center gap-2"
-                    href="#"
-                  >
-                    <span className="material-symbols-outlined text-xs">
-                      corporate_fare
-                    </span>{' '}
-                    About Us
-                  </a>
-                </li>
-                <li>
-                  <a
-                    className="hover:text-primary transition-colors flex items-center gap-2"
-                    href="#"
-                  >
-                    <span className="material-symbols-outlined text-xs">
-                      gavel
-                    </span>{' '}
-                    Terms of Service
-                  </a>
-                </li>
-                <li>
-                  <a
-                    className="hover:text-primary transition-colors flex items-center gap-2"
-                    href="#"
-                  >
-                    <span className="material-symbols-outlined text-xs">
-                      support_agent
-                    </span>{' '}
-                    Contact Support
-                  </a>
-                </li>
-              </ul>
-            </div>
-          </div>
-          <div className="pt-8 border-t border-border-light dark:border-border-dark flex flex-col md:flex-row justify-between items-center gap-6 text-xs text-slate-400 font-medium">
-            <p>
-              © 2024 BoltCalculator Engineering Suite. All rights reserved.
-              Registered ISO-9001 Partner.
-            </p>
-            <div className="flex gap-8">
-              <a
-                className="hover:text-primary transition-colors uppercase tracking-widest"
-                href="#"
-              >
-                Privacy
-              </a>
-              <a
-                className="hover:text-primary transition-colors uppercase tracking-widest"
-                href="#"
-              >
-                Security
-              </a>
-              <a
-                className="hover:text-primary transition-colors uppercase tracking-widest"
-                href="#"
-              >
-                SLA
-              </a>
-            </div>
-          </div>
-        </div>
-      </footer>
+      <Footer showSocialLinks={true} />
     </>
   );
 }

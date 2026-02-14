@@ -18,14 +18,51 @@ function initializeResult() {
   return null;
 }
 
+function initializeResultHistory() {
+  if (typeof window === 'undefined') return [];
+  const stored = localStorage.getItem('boltResultHistory');
+  if (stored) {
+    try {
+      return JSON.parse(stored);
+    } catch (error) {
+      console.error('Failed to parse stored result history:', error);
+      localStorage.removeItem('boltResultHistory');
+    }
+  }
+  return [];
+}
+
 export function ResultProvider({ children }) {
+  const [userInput, setUserInput] = useState({});
   const [result, setResultState] = useState(initializeResult);
   const [isLoading, setIsLoading] = useState(false);
+  const [resultHistory, setResultHistory] = useState(initializeResultHistory);
+  const [historyIndex, setHistoryIndex] = useState();
 
-  const setResult = (data) => {
+  const setResult = (data, userInputData) => {
+    console.log(userInputData);
+    // for showing in results
     setResultState(data);
     if (data) {
       localStorage.setItem('boltResult', JSON.stringify(data));
+    }
+
+    // for history
+    const localData = { userInputData, ...data };
+
+    if (localData) {
+      setResultHistory((prevHistory) => {
+        const updatedHistory = [...prevHistory, localData];
+        // Keep only the last 5 elements
+        if (updatedHistory.length > 5) {
+          updatedHistory.shift(); // Remove the oldest (first) element
+        }
+        localStorage.setItem(
+          'boltResultHistory',
+          JSON.stringify(updatedHistory),
+        );
+        return updatedHistory;
+      });
     }
   };
 
@@ -36,7 +73,18 @@ export function ResultProvider({ children }) {
 
   return (
     <ResultContext.Provider
-      value={{ result, setResult, clearResult, isLoading, setIsLoading }}
+      value={{
+        userInput,
+        setUserInput,
+        result,
+        setResult,
+        clearResult,
+        isLoading,
+        setIsLoading,
+        resultHistory,
+        historyIndex,
+        setHistoryIndex,
+      }}
     >
       {children}
     </ResultContext.Provider>

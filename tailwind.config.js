@@ -14,10 +14,18 @@ export default {
         'surface-dark': '#1e293b',
         'border-light': '#e2e8f0',
         'border-dark': '#334155',
+        techBlue: {
+          50: '#f0f9ff',
+          100: '#e0f2fe',
+          500: '#0ea5e9',
+          600: '#0284c7',
+          700: '#0369a1',
+        },
       },
       fontFamily: {
         sans: ['Inter', 'sans-serif'],
         mono: ['JetBrains Mono', 'monospace'],
+        display: ['Public Sans', 'sans-serif'],
       },
       borderRadius: {
         DEFAULT: '0.5rem',

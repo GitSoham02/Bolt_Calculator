@@ -3,14 +3,18 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 
-function NavBar() {
+function NavBar({
+  variant = 'sidebar',
+  icon = 'settings_input_component',
+  brandName = 'Bolt',
+  brandHighlight = 'Calculator',
+  showSocialLinks = false,
+}) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [isDarkMode, setIsDarkMode] = useState(false);
-
-  useEffect(() => {
-    const isDark = document.documentElement.classList.contains('dark');
-    setIsDarkMode(isDark);
-  }, []);
+  const [isDarkMode, setIsDarkMode] = useState(
+    typeof document !== 'undefined' &&
+      document.documentElement.classList.contains('dark'),
+  );
 
   const closeMobileMenu = () => setIsMobileMenuOpen(false);
 
@@ -18,6 +22,53 @@ function NavBar() {
     document.documentElement.classList.toggle('dark');
     setIsDarkMode((prev) => !prev);
   };
+
+  // Horizontal navbar variant for marketing pages
+  if (variant === 'horizontal') {
+    return (
+      <nav className="fixed top-0 left-0 right-0 z-50 border-b border-border-light dark:border-border-dark bg-surface-light dark:bg-surface-dark md:bg-surface-light/80 md:dark:bg-surface-dark/80 backdrop-blur-none md:backdrop-blur-md">
+        <div className="max-w-7xl mx-auto px-6 h-20 flex items-center justify-start md:justify-between w-full">
+          <div className="flex items-center gap-3 shrink-0">
+            <div className="bg-primary p-1.5 rounded-lg flex items-center justify-center">
+              <span
+                className="material-symbols-outlined text-white text-2xl"
+                style={{ fontVariationSettings: "'FILL' 1" }}
+              >
+                {icon}
+              </span>
+            </div>
+            <span className="font-bold text-xl tracking-tight whitespace-nowrap">
+              {brandName}
+              <span className="text-primary">{brandHighlight}</span>
+            </span>
+          </div>
+          <div className="hidden md:flex items-center gap-8 text-sm font-medium text-slate-600 dark:text-slate-400 shrink-0">
+            <Link className="hover:text-primary transition-colors" href="/home">
+              Home
+            </Link>
+            <Link
+              className="hover:text-primary transition-colors"
+              href="#features"
+            >
+              Features
+            </Link>
+            <Link
+              className="hover:text-primary transition-colors"
+              href="/about"
+            >
+              About
+            </Link>
+            <Link
+              className="bg-primary text-white px-5 py-2.5 rounded-lg hover:bg-blue-700 transition-all duration-300 shadow-md shadow-primary/20 btn-glow transform hover:scale-105"
+              href="/input"
+            >
+              Launch Calculator
+            </Link>
+          </div>
+        </div>
+      </nav>
+    );
+  }
 
   return (
     <>
