@@ -1,33 +1,87 @@
 'use client';
 
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
-import { useState, useEffect } from 'react';
-import { useResult } from '@/app/context/ResultContext';
+import { useState, useEffect, Suspense } from 'react';
 import { Superscript } from 'lucide-react';
 
-export default function HistoryReportPage() {
+function HistoryReportContent() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const [isExporting, setIsExporting] = useState(false);
   const [bolt, setBolt] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-
-  const { historyIndex } = useResult();
+  const [error, setError] = useState(null);
 
   // Fetch bolt data from localStorage on client side only
   useEffect(() => {
     setIsLoading(true);
+    setError(null);
+
     try {
+      // Get index from URL search params
+      const indexParam = searchParams.get('index');
+
+      // Validate: check if index is a valid number
+      if (indexParam === null || indexParam === undefined) {
+        setError('No history index provided');
+        setBolt(null);
+        setIsLoading(false);
+        return;
+      }
+
+      const historyIndex = parseInt(indexParam, 10);
+
+      if (isNaN(historyIndex) || historyIndex < 0) {
+        setError('Invalid history index');
+        setBolt(null);
+        setIsLoading(false);
+        return;
+      }
+
       const storedData = localStorage.getItem('boltResultHistory');
       const boltHistoryData = JSON.parse(storedData) || [];
-      setBolt(boltHistoryData[historyIndex]);
+
+      // Validate: check if index is within bounds
+      if (historyIndex >= boltHistoryData.length) {
+        setError('History record not found');
+        setBolt(null);
+        setIsLoading(false);
+        return;
+      }
+
+      const boltData = boltHistoryData[historyIndex];
+
+      // Validate: check if bolt.curBolt exists before accessing
+      if (!boltData || !boltData.curBolt) {
+        setError('Invalid bolt data: missing bolt information');
+        setBolt(null);
+        setIsLoading(false);
+        return;
+      }
+
+      // Validate: check if required nested properties exist
+      if (
+        !boltData.curBoltProperty ||
+        !boltData.userInputData ||
+        !boltData.obtainedValues ||
+        !boltData.limits
+      ) {
+        setError('Invalid bolt data: missing required properties');
+        setBolt(null);
+        setIsLoading(false);
+        return;
+      }
+
+      setBolt(boltData);
     } catch (error) {
       console.error('Error loading bolt data:', error);
+      setError('Failed to load calculation history');
       setBolt(null);
     } finally {
       setIsLoading(false);
     }
-  }, [historyIndex]);
+  }, [searchParams]);
 
   // Show loading state
   if (isLoading) {
@@ -41,14 +95,14 @@ export default function HistoryReportPage() {
     );
   }
 
-  // Redirect if no bolt data found
-  if (bolt === undefined || bolt === null) {
+  // Redirect if no bolt data found or error
+  if (error || bolt === undefined || bolt === null) {
     return (
       <div className="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 min-h-screen flex items-center justify-center">
         <div className="text-center">
           <h2 className="text-2xl font-bold mb-2">Report Not Found</h2>
           <p className="text-slate-500 mb-4">
-            The requested report could not be found.
+            {error || 'The requested report could not be found.'}
           </p>
           <button
             onClick={() => router.push('/history')}
@@ -494,5 +548,22 @@ export default function HistoryReportPage() {
         </div>
       </footer>
     </div>
+  );
+}
+
+export default function HistoryReportPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 min-h-screen flex items-center justify-center">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+            <p className="text-slate-500">Loading report...</p>
+          </div>
+        </div>
+      }
+    >
+      <HistoryReportContent />
+    </Suspense>
   );
 }

@@ -47,8 +47,8 @@ export default function HistoryPage() {
     const boltHistoryData = JSON.parse(storedData) || [];
     const actualIndex = boltHistoryData.length - 1 - index;
 
-    setHistoryIndex(actualIndex);
-    router.push('/history/report');
+    // Pass index as URL parameter instead of context
+    router.push(`/history/report?index=${actualIndex}`);
   }
 
   // const getStatus = (tensileStress, limit) => {
