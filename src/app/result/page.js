@@ -10,6 +10,7 @@ import Image from 'next/image';
 export default function ResultPage() {
   const router = useRouter();
   const { result, clearResult, userInput } = useResult();
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
 
@@ -221,7 +222,10 @@ export default function ResultPage() {
 
   return (
     <div className="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 min-h-screen flex fixed inset-0 m-0 p-0 overflow-hidden">
-      <Dashboard />
+      <Dashboard
+        isMobileMenuOpen={isMobileMenuOpen}
+        setIsMobileMenuOpen={setIsMobileMenuOpen}
+      />
 
       <main className="flex-1 flex flex-col min-w-0 overflow-y-auto">
         <div className="flex-1 max-w-7xl mx-auto px-3 mt-16 sm:px-4 md:px-6 lg:px-8 py-4 sm:py-6 md:py-8 w-full">

@@ -13,6 +13,7 @@ export default function InputPage() {
   const router = useRouter();
   const { userInput, setUserInput, setResult, setIsLoading, isLoading } =
     useResult();
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [formData, setFormData] = useState({
     plateThickness: '',
     engagedThreadLength: '',
@@ -99,12 +100,15 @@ export default function InputPage() {
 
   return (
     <div className="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 min-h-screen flex fixed inset-0 m-0 p-0 overflow-hidden">
-      <Dashboard />
+      <Dashboard
+        isMobileMenuOpen={isMobileMenuOpen}
+        setIsMobileMenuOpen={setIsMobileMenuOpen}
+      />
 
       {/* Main Content */}
       <main className="flex-1 flex flex-col min-w-0 overflow-y-auto">
         {/* Header */}
-        <NavBar />
+        <NavBar onMobileMenuOpen={() => setIsMobileMenuOpen(true)} />
 
         {/* Form Content */}
         <div className="p-4 sm:p-6 mt-2 md:p-8 max-w-6xl mx-auto w-full">

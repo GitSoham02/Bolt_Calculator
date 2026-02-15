@@ -9,6 +9,7 @@ import { useRouter } from 'next/navigation';
 
 export default function HistoryPage() {
   const router = useRouter();
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [historyItems, setHistoryItems] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState('');
@@ -82,10 +83,13 @@ export default function HistoryPage() {
 
   return (
     <div className="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 min-h-screen flex fixed inset-0 m-0 p-0 overflow-hidden">
-      <Dashboard />
+      <Dashboard
+        isMobileMenuOpen={isMobileMenuOpen}
+        setIsMobileMenuOpen={setIsMobileMenuOpen}
+      />
 
       <main className="flex-1 flex flex-col min-w-0 overflow-y-auto">
-        <NavBar />
+        <NavBar onMobileMenuOpen={() => setIsMobileMenuOpen(true)} />
         <div className="p-4 sm:p-6 md:p-8 max-w-5xl mx-auto w-full">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
             <div>
