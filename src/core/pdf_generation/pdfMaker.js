@@ -1,35 +1,86 @@
-import puppeteer from 'puppeteer';
+import chromium from '@sparticuz/chromium';
+import puppeteer from 'puppeteer-core';
 import { buildHTMLReport } from './pdfTemplate.js';
 
 export async function generatePDF(result) {
-  // const dataPath = path.join(
-  //   process.cwd(),
-  //   'src',
-  //   'core',
-  //   'data',
-  //   'storedValue.json',
-  // );
-  // const storedData = await fs.readFile(dataPath, 'utf-8');
-  // const result = JSON.parse(storedData);
-  const browser = await puppeteer.launch({
-    headless: true,
-  });
+  let browser;
+  
+  try {
+    console.log('[PDF] Starting PDF generation...');
+    console.log('[PDF] Environment:', process.env.NODE_ENV);
+    console.log('[PDF] Platform:', process.platform);
+    
+    // Validate input data
+    if (!result || typeof result !== 'object') {
+      throw new Error('Invalid result data provided to PDF generator');
+    }
 
-  const page = await browser.newPage();
+    // Launch browser with serverless-compatible config
+    const executablePath = process.env.NODE_ENV === 'production'
+      ? await chromium.executablePath()
+      : process.platform === 'win32'
+        ? 'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe'
+        : process.platform === 'darwin'
+          ? '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'
+          : '/usr/bin/chromium-browser';
 
-  const html = buildHTMLReport(result);
+    console.log('[PDF] Executable path:', executablePath);
 
-  await page.setContent(html, { waitUntil: 'networkidle0' });
+    browser = await puppeteer.launch({
+      args: process.env.NODE_ENV === 'production'
+        ? chromium.args
+        : ['--no-sandbox', '--disable-setuid-sandbox'],
+      defaultViewport: chromium.defaultViewport,
+      executablePath: executablePath,
+      headless: chromium.headless || true,
+    });
 
-  const pdfBuffer = await page.pdf({
-    format: 'A4',
-    printBackground: true,
-  });
+    console.log('[PDF] Browser launched successfully');
 
-  await browser.close();
+    const page = await browser.newPage();
+    console.log('[PDF] New page created');
 
-  //   await fs.writeFile(outputPath, pdfBuffer);
+    const html = buildHTMLReport(result);
+    console.log('[PDF] HTML report built, length:', html.length);
 
-  return pdfBuffer;
+    await page.setContent(html, { 
+      waitUntil: 'networkidle0',
+      timeout: 30000 
+    });
+    console.log('[PDF] Content set successfully');
+
+    const pdfBuffer = await page.pdf({
+      format: 'A4',
+      printBackground: true,
+      margin: {
+        top: '20px',
+        right: '20px',
+        bottom: '20px',
+        left: '20px',
+      },
+    });
+
+    console.log('[PDF] PDF generated successfully, size:', pdfBuffer.length, 'bytes');
+    return pdfBuffer;
+    
+  } catch (error) {
+    console.error('[PDF] Error during PDF generation:', error);
+    console.error('[PDF] Error stack:', error.stack);
+    console.error('[PDF] Error details:', {
+      message: error.message,
+      name: error.name,
+      code: error.code,
+    });
+    throw new Error(`PDF generation failed: ${error.message}`);
+  } finally {
+    // Ensure browser is always closed
+    if (browser) {
+      try {
+        await browser.close();
+        console.log('[PDF] Browser closed successfully');
+      } catch (closeError) {
+        console.error('[PDF] Error closing browser:', closeError);
+      }
+    }
+  }
 }
-// generatePDF()
