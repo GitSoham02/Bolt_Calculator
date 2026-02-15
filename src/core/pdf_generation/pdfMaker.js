@@ -1,35 +1,29 @@
-import puppeteer from 'puppeteer';
-import { buildHTMLReport } from './pdfTemplate.js';
+import React from 'react';
+import { renderToBuffer } from '@react-pdf/renderer';
+import PDFDocument from './pdfDocument.jsx';
 
 export async function generatePDF(result) {
-  // const dataPath = path.join(
-  //   process.cwd(),
-  //   'src',
-  //   'core',
-  //   'data',
-  //   'storedValue.json',
-  // );
-  // const storedData = await fs.readFile(dataPath, 'utf-8');
-  // const result = JSON.parse(storedData);
-  const browser = await puppeteer.launch({
-    headless: true,
-  });
+  try {
+    console.log('[PDF] Starting PDF generation with React PDF...');
+    console.log('[PDF] Environment:', process.env.NODE_ENV);
 
-  const page = await browser.newPage();
+    // Validate input data
+    if (!result || typeof result !== 'object') {
+      throw new Error('Invalid result data provided to PDF generator');
+    }
 
-  const html = buildHTMLReport(result);
+    // Generate PDF using React PDF
+    const pdfBuffer = await renderToBuffer(<PDFDocument data={result} />);
 
-  await page.setContent(html, { waitUntil: 'networkidle0' });
-
-  const pdfBuffer = await page.pdf({
-    format: 'A4',
-    printBackground: true,
-  });
-
-  await browser.close();
-
-  //   await fs.writeFile(outputPath, pdfBuffer);
-
-  return pdfBuffer;
+    console.log(
+      '[PDF] PDF generated successfully, size:',
+      pdfBuffer.length,
+      'bytes',
+    );
+    return pdfBuffer;
+  } catch (error) {
+    console.error('[PDF] Error during PDF generation:', error);
+    console.error('[PDF] Error stack:', error.stack);
+    throw new Error(`PDF generation failed: ${error.message}`);
+  }
 }
-// generatePDF()

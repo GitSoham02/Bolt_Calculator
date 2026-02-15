@@ -40,7 +40,14 @@ export function ResultProvider({ children }) {
   const [historyIndex, setHistoryIndex] = useState();
 
   const setResult = (data, userInputData) => {
-    console.log(userInputData);
+    console.log(
+      '[ResultContext] Setting result with userInputData:',
+      userInputData,
+    );
+
+    // Update userInput state so it's available in result page
+    setUserInput(userInputData || {});
+
     // for showing in results
     setResultState(data);
     if (data) {

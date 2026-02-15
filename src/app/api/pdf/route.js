@@ -1,51 +1,63 @@
 import { NextResponse } from 'next/server';
-import fs from 'fs/promises';
-import path from 'path';
 import { generatePDF } from '@/core/pdf_generation/pdfMaker';
 
-// // Resolve project root safely
-// const DATA_DIR = path.join(process.cwd(), 'src', 'app', 'data', 'debug');
-// const INPUT_FILE = path.join(DATA_DIR, 'userInput.json');
-
 export async function POST(req) {
+  console.log('[PDF API] Received PDF generation request');
+
   try {
+    // Parse request body
     const input = await req.json();
-    // 1. Read JSON payload from request
-    // const input = await req.json();
+    console.log('[PDF API] Request data received:', {
+      hasCurBolt: !!input?.curBolt,
+      hasCurBoltProperty: !!input?.curBoltProperty,
+      hasUserData: !!input?.userData,
+    });
 
-    // // 2. Basic sanity check (minimal validation)
-    // if (!input || typeof input !== 'object') {
-    //   return NextResponse.json(
-    //     { error: 'Invalid input payload' },
-    //     { status: 400 },
-    //   );
-    // }
+    // Validate input
+    if (!input || typeof input !== 'object') {
+      console.error('[PDF API] Invalid input payload');
+      return NextResponse.json(
+        { error: 'Invalid input payload' },
+        { status: 400 },
+      );
+    }
 
-    // // 3. Ensure debug directory exists
-    // await fs.mkdir(DATA_DIR, { recursive: true });
+    // Generate PDF
+    console.log('[PDF API] Calling generatePDF...');
+    const pdfBuffer = await generatePDF(input);
 
-    // // 4. Write input to JSON file (DEBUG ONLY)
-    // await fs.writeFile(INPUT_FILE, JSON.stringify(input, null, 2), 'utf-8');
+    if (!pdfBuffer || pdfBuffer.length === 0) {
+      throw new Error('PDF generation returned empty buffer');
+    }
 
-    // 4. Real result from calculations - uncomment after writing calculation part
-    const pdf = await generatePDF(input);
-    // return NextResponse.json(pdf);
-    return new NextResponse(pdf, {
+    console.log(
+      '[PDF API] PDF generated successfully, size:',
+      pdfBuffer.length,
+    );
+
+    // Return PDF as binary response
+    return new NextResponse(pdfBuffer, {
+      status: 200,
       headers: {
         'Content-Type': 'application/pdf',
         'Content-Disposition': 'attachment; filename=bolt-report.pdf',
+        'Content-Length': pdfBuffer.length.toString(),
       },
     });
-
-    // // 5. Respond back to frontend
-    // return NextResponse.json({
-    //   message: 'Input received and stored for debugging',
-    //   input,
-    // });
   } catch (error) {
-    // 6. Fail safely
+    console.error('[PDF API] Error generating PDF:', error);
+    console.error('[PDF API] Error stack:', error.stack);
+    console.error('[PDF API] Error message:', error.message);
+
+    // Return a proper error response (NOT a PDF)
+    // This prevents "Failed to load PDF document" error on client
     return NextResponse.json(
-      { error: 'Failed to process this request' },
+      {
+        error: 'Failed to generate PDF report',
+        // Show detailed error message to help with debugging
+        details: error.message || 'Unknown error occurred',
+        timestamp: new Date().toISOString(),
+      },
       { status: 500 },
     );
   }
