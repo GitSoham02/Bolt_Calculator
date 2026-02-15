@@ -18,6 +18,8 @@ export default function ResultPage() {
 
   // PDF Download function
   async function handlePDFDownload() {
+    console.log('[Result] userInput from context:', userInput);
+    console.log('[Result] result from context:', result);
     const pdfBoltData = { userData: userInput, ...result };
     console.log('[Result] Requesting PDF generation:', pdfBoltData);
 

@@ -192,9 +192,12 @@ export default function HistoryReportPage() {
   };
 
   async function handleExportPDF() {
+    console.log('[Report] bolt object:', bolt);
+    console.log('[Report] bolt.userInputData:', bolt.userInputData);
     const { userInputData, ...rest } = bolt;
     const boltData = { ...rest, userData: userInputData };
     console.log('[Report] Requesting PDF generation:', boltData);
+    console.log('[Report] boltData.userData:', boltData.userData);
     setIsExporting(true);
 
     try {
