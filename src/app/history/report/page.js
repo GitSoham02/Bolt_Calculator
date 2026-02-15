@@ -196,7 +196,7 @@ export default function HistoryReportPage() {
     const boltData = { ...rest, userData: userInputData };
     console.log('[Report] Requesting PDF generation:', boltData);
     setIsExporting(true);
-    
+
     try {
       const response = await fetch('/api/pdf', {
         method: 'POST',
@@ -207,22 +207,26 @@ export default function HistoryReportPage() {
       // Check if response is an error
       if (!response.ok) {
         const contentType = response.headers.get('content-type');
-        
+
         // If server returned JSON, it's an error message
         if (contentType && contentType.includes('application/json')) {
           const errorData = await response.json();
           console.error('[Report] PDF generation error:', errorData);
-          alert(`Failed to generate PDF: ${errorData.details || errorData.error || 'Unknown error'}`);
+          alert(
+            `Failed to generate PDF: ${errorData.details || errorData.error || 'Unknown error'}`,
+          );
           return;
         }
-        
+
         // Other error
-        throw new Error(`Server returned ${response.status}: ${response.statusText}`);
+        throw new Error(
+          `Server returned ${response.status}: ${response.statusText}`,
+        );
       }
 
       // Success - we have a PDF
       const blob = await response.blob();
-      
+
       // Verify it's actually a PDF
       if (blob.type !== 'application/pdf' && blob.size === 0) {
         throw new Error('Received invalid PDF data');
@@ -234,7 +238,7 @@ export default function HistoryReportPage() {
       a.download = `bolt-report.pdf`;
       a.click();
       window.URL.revokeObjectURL(url);
-      
+
       console.log('[Report] PDF downloaded successfully');
     } catch (error) {
       console.error('[Report] PDF export failed:', error);

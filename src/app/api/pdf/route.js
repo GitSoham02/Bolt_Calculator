@@ -3,7 +3,7 @@ import { generatePDF } from '@/core/pdf_generation/pdfMaker';
 
 export async function POST(req) {
   console.log('[PDF API] Received PDF generation request');
-  
+
   try {
     // Parse request body
     const input = await req.json();
@@ -25,12 +25,15 @@ export async function POST(req) {
     // Generate PDF
     console.log('[PDF API] Calling generatePDF...');
     const pdfBuffer = await generatePDF(input);
-    
+
     if (!pdfBuffer || pdfBuffer.length === 0) {
       throw new Error('PDF generation returned empty buffer');
     }
 
-    console.log('[PDF API] PDF generated successfully, size:', pdfBuffer.length);
+    console.log(
+      '[PDF API] PDF generated successfully, size:',
+      pdfBuffer.length,
+    );
 
     // Return PDF as binary response
     return new NextResponse(pdfBuffer, {
@@ -41,7 +44,6 @@ export async function POST(req) {
         'Content-Length': pdfBuffer.length.toString(),
       },
     });
-    
   } catch (error) {
     console.error('[PDF API] Error generating PDF:', error);
     console.error('[PDF API] Error stack:', error.stack);
@@ -50,9 +52,10 @@ export async function POST(req) {
     // Return a proper error response (NOT a PDF)
     // This prevents "Failed to load PDF document" error on client
     return NextResponse.json(
-      { 
+      {
         error: 'Failed to generate PDF report',
-        details: process.env.NODE_ENV === 'development' ? error.message : 'Internal server error',
+        // Show detailed error message to help with debugging
+        details: error.message || 'Unknown error occurred',
         timestamp: new Date().toISOString(),
       },
       { status: 500 },
