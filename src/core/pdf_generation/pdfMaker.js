@@ -22,18 +22,20 @@ export async function generatePDF(result) {
 
     let executablePath;
     let launchArgs;
-    
+
     if (isVercel) {
       // Running in Vercel - use chromium from @sparticuz/chromium
       console.log('[PDF] Configuring for Vercel serverless environment...');
-      
+
       try {
         // Configure chromium for serverless with proper options
         executablePath = await chromium.executablePath({
           // This helps with finding the binaries in Vercel
-          ...(process.env.FONTCONFIG_PATH && { FONTCONFIG_PATH: process.env.FONTCONFIG_PATH }),
+          ...(process.env.FONTCONFIG_PATH && {
+            FONTCONFIG_PATH: process.env.FONTCONFIG_PATH,
+          }),
         });
-        
+
         launchArgs = [
           ...chromium.args,
           '--disable-gpu',
@@ -84,13 +86,17 @@ export async function generatePDF(result) {
             'Please install Google Chrome or set CHROME_PATH environment variable.',
         );
       }
-      
+
       launchArgs = ['--no-sandbox', '--disable-setuid-sandbox'];
     }
 
     console.log('[PDF] Is Vercel:', isVercel);
     console.log('[PDF] Executable path:', executablePath);
-    console.log('[PDF] Launch args:', launchArgs?.slice(0, 3).join(', '), '...');
+    console.log(
+      '[PDF] Launch args:',
+      launchArgs?.slice(0, 3).join(', '),
+      '...',
+    );
 
     browser = await puppeteer.launch({
       args: launchArgs,
