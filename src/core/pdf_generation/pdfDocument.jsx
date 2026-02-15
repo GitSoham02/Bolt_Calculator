@@ -1,5 +1,12 @@
 import React from 'react';
-import { Document, Page, Text, View, StyleSheet } from '@react-pdf/renderer';
+import {
+  Document,
+  Page,
+  Text,
+  View,
+  StyleSheet,
+  Link,
+} from '@react-pdf/renderer';
 
 const styles = StyleSheet.create({
   page: {
@@ -181,6 +188,51 @@ const styles = StyleSheet.create({
     fontSize: 8,
     color: '#64748b',
     textAlign: 'right',
+  },
+  actionSection: {
+    marginTop: 32,
+    paddingTop: 20,
+    borderTopWidth: 1,
+    borderTopColor: '#f1f5f9',
+  },
+  actionBox: {
+    backgroundColor: '#f8fafc',
+    borderWidth: 1,
+    borderColor: '#e2e8f0',
+    borderRadius: 8,
+    padding: 16,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  actionContent: {
+    flex: 1,
+  },
+  actionTitle: {
+    fontSize: 9,
+    fontFamily: 'Helvetica-Bold',
+    color: '#0f172a',
+    textTransform: 'uppercase',
+    letterSpacing: 1.5,
+    marginBottom: 3,
+  },
+  actionDescription: {
+    fontSize: 9,
+    color: '#64748b',
+  },
+  actionButton: {
+    backgroundColor: '#1978e5',
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+    borderRadius: 8,
+    textDecoration: 'none',
+  },
+  actionButtonText: {
+    color: '#ffffff',
+    fontSize: 8,
+    fontFamily: 'Helvetica-Bold',
+    textTransform: 'uppercase',
+    letterSpacing: 1,
   },
 });
 
@@ -618,6 +670,24 @@ const PDFDocument = ({ data }) => {
                 </Text>
               </View>
             </View>
+          </View>
+        </View>
+
+        {/* Action Section */}
+        <View style={styles.actionSection}>
+          <View style={styles.actionBox}>
+            <View style={styles.actionContent}>
+              <Text style={styles.actionTitle}>Recalculate</Text>
+              <Text style={styles.actionDescription}>
+                Want to calculate again? Visit Bolt Calculator
+              </Text>
+            </View>
+            <Link
+              src="https://bolt-calculator.vercel.app/input"
+              style={styles.actionButton}
+            >
+              <Text style={styles.actionButtonText}>Go to Calculator</Text>
+            </Link>
           </View>
         </View>
 
