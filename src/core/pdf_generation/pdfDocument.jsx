@@ -332,7 +332,7 @@ const PDFDocument = ({ data }) => {
                   </View>
                   <View style={{ flex: 1, alignItems: 'flex-end' }}>
                     <Text style={[styles.tableCell, styles.tableCellBold]}>
-                      {formatNumber(userData.plateThickness)} mm
+                      {formatNumber(userData?.plateThickness)} mm
                     </Text>
                   </View>
                 </View>
@@ -342,7 +342,7 @@ const PDFDocument = ({ data }) => {
                   </View>
                   <View style={{ flex: 1, alignItems: 'flex-end' }}>
                     <Text style={[styles.tableCell, styles.tableCellBold]}>
-                      {formatNumber(userData.engagedThreadLength)} mm
+                      {formatNumber(userData?.engagedThreadLength)} mm
                     </Text>
                   </View>
                 </View>
@@ -352,7 +352,7 @@ const PDFDocument = ({ data }) => {
                   </View>
                   <View style={{ flex: 1, alignItems: 'flex-end' }}>
                     <Text style={[styles.tableCell, styles.tableCellBold]}>
-                      {formatNumber(userData.externalLoad, 0)} N
+                      {formatNumber(userData?.externalLoad, 0)} N
                     </Text>
                   </View>
                 </View>
@@ -362,7 +362,7 @@ const PDFDocument = ({ data }) => {
                   </View>
                   <View style={{ flex: 1, alignItems: 'flex-end' }}>
                     <Text style={[styles.tableCell, styles.tableCellBold]}>
-                      {formatNumber(userData.preLoad, 0)} N
+                      {formatNumber(userData?.preLoad, 0)} N
                     </Text>
                   </View>
                 </View>
@@ -372,7 +372,7 @@ const PDFDocument = ({ data }) => {
                   </View>
                   <View style={{ flex: 1, alignItems: 'flex-end' }}>
                     <Text style={[styles.tableCell, styles.tableCellBold]}>
-                      {formatNumber(userData.lateralLoad, 0)} N
+                      {formatNumber(userData?.lateralLoad, 0)} N
                     </Text>
                   </View>
                 </View>
@@ -431,25 +431,25 @@ const PDFDocument = ({ data }) => {
               <View style={[styles.boltBoxCol, styles.boltBoxColFirst]}>
                 <Text style={styles.boltBoxLabel}>Bolt Size</Text>
                 <Text style={styles.boltBoxValue}>
-                  {curBolt.designation || '-'}
+                  {curBolt?.designation || '-'}
                 </Text>
               </View>
               <View style={styles.boltBoxCol}>
                 <Text style={styles.boltBoxLabel}>Bolt Grade</Text>
                 <Text style={styles.boltBoxValue}>
-                  {curBoltProperty.className || '-'}
+                  {curBoltProperty?.className || '-'}
                 </Text>
               </View>
               <View style={styles.boltBoxCol}>
                 <Text style={styles.boltBoxLabel}>Bolt Diameter</Text>
                 <Text style={styles.boltBoxValue}>
-                  {formatNumber(curBolt.nominalDiameter)} mm
+                  {formatNumber(curBolt?.nominalDiameter)} mm
                 </Text>
               </View>
               <View style={styles.boltBoxCol}>
                 <Text style={styles.boltBoxLabel}>Tensile Stress Area</Text>
                 <Text style={styles.boltBoxValue}>
-                  {formatNumber(curBolt.tensileStressArea, 1)} mm²
+                  {formatNumber(curBolt?.tensileStressArea, 1)} mm²
                 </Text>
               </View>
             </View>
@@ -484,23 +484,23 @@ const PDFDocument = ({ data }) => {
               </View>
               <View style={{ flex: 1.5, alignItems: 'flex-end' }}>
                 <Text style={styles.tableCell}>
-                  {formatNumber(obtained.tensileStress)} MPa
+                  {formatNumber(obtained?.tensileStress)} MPa
                 </Text>
               </View>
               <View style={{ flex: 1.5, alignItems: 'flex-end' }}>
                 <Text style={styles.tableCell}>
-                  {formatNumber(limits.tensileStress)} MPa
+                  {formatNumber(limits?.tensileStress)} MPa
                 </Text>
               </View>
               <View style={{ flex: 1, alignItems: 'flex-end' }}>
                 <Text
                   style={
-                    isPass(obtained.tensileStress, limits.tensileStress)
+                    isPass(obtained?.tensileStress, limits?.tensileStress)
                       ? styles.statusPass
                       : styles.statusFail
                   }
                 >
-                  {isPass(obtained.tensileStress, limits.tensileStress)
+                  {isPass(obtained?.tensileStress, limits?.tensileStress)
                     ? 'PASS'
                     : 'FAIL'}
                 </Text>
@@ -516,23 +516,23 @@ const PDFDocument = ({ data }) => {
               </View>
               <View style={{ flex: 1.5, alignItems: 'flex-end' }}>
                 <Text style={styles.tableCell}>
-                  {formatNumber(obtained.shearStress)} MPa
+                  {formatNumber(obtained?.shearStress)} MPa
                 </Text>
               </View>
               <View style={{ flex: 1.5, alignItems: 'flex-end' }}>
                 <Text style={styles.tableCell}>
-                  {formatNumber(limits.shearStress)} MPa
+                  {formatNumber(limits?.shearStress)} MPa
                 </Text>
               </View>
               <View style={{ flex: 1, alignItems: 'flex-end' }}>
                 <Text
                   style={
-                    isPass(obtained.shearStress, limits.shearStress)
+                    isPass(obtained?.shearStress, limits?.shearStress)
                       ? styles.statusPass
                       : styles.statusFail
                   }
                 >
-                  {isPass(obtained.shearStress, limits.shearStress)
+                  {isPass(obtained?.shearStress, limits?.shearStress)
                     ? 'PASS'
                     : 'FAIL'}
                 </Text>
@@ -548,28 +548,28 @@ const PDFDocument = ({ data }) => {
               </View>
               <View style={{ flex: 1.5, alignItems: 'flex-end' }}>
                 <Text style={styles.tableCell}>
-                  {formatNumber(obtained.plateBearingStress)} MPa
+                  {formatNumber(obtained?.plateBearingStress)} MPa
                 </Text>
               </View>
               <View style={{ flex: 1.5, alignItems: 'flex-end' }}>
                 <Text style={styles.tableCell}>
-                  {formatNumber(limits.plateBearingStress)} MPa
+                  {formatNumber(limits?.plateBearingStress)} MPa
                 </Text>
               </View>
               <View style={{ flex: 1, alignItems: 'flex-end' }}>
                 <Text
                   style={
                     isPass(
-                      obtained.plateBearingStress,
-                      limits.plateBearingStress,
+                      obtained?.plateBearingStress,
+                      limits?.plateBearingStress,
                     )
                       ? styles.statusPass
                       : styles.statusFail
                   }
                 >
                   {isPass(
-                    obtained.plateBearingStress,
-                    limits.plateBearingStress,
+                    obtained?.plateBearingStress,
+                    limits?.plateBearingStress,
                   )
                     ? 'PASS'
                     : 'FAIL'}
@@ -586,23 +586,29 @@ const PDFDocument = ({ data }) => {
               </View>
               <View style={{ flex: 1.5, alignItems: 'flex-end' }}>
                 <Text style={styles.tableCell}>
-                  {formatNumber(obtained.threadShearStress)} MPa
+                  {formatNumber(obtained?.threadShearStress)} MPa
                 </Text>
               </View>
               <View style={{ flex: 1.5, alignItems: 'flex-end' }}>
                 <Text style={styles.tableCell}>
-                  {formatNumber(limits.threadShearStress)} MPa
+                  {formatNumber(limits?.threadShearStress)} MPa
                 </Text>
               </View>
               <View style={{ flex: 1, alignItems: 'flex-end' }}>
                 <Text
                   style={
-                    isPass(obtained.threadShearStress, limits.threadShearStress)
+                    isPass(
+                      obtained?.threadShearStress,
+                      limits?.threadShearStress,
+                    )
                       ? styles.statusPass
                       : styles.statusFail
                   }
                 >
-                  {isPass(obtained.threadShearStress, limits.threadShearStress)
+                  {isPass(
+                    obtained?.threadShearStress,
+                    limits?.threadShearStress,
+                  )
                     ? 'PASS'
                     : 'FAIL'}
                 </Text>
@@ -618,23 +624,23 @@ const PDFDocument = ({ data }) => {
               </View>
               <View style={{ flex: 1.5, alignItems: 'flex-end' }}>
                 <Text style={styles.tableCell}>
-                  {formatNumber(obtained.preLoad)} N
+                  {formatNumber(obtained?.preLoad)} N
                 </Text>
               </View>
               <View style={{ flex: 1.5, alignItems: 'flex-end' }}>
                 <Text style={styles.tableCell}>
-                  {formatNumber(limits.preLoad)} N
+                  {formatNumber(limits?.preLoad)} N
                 </Text>
               </View>
               <View style={{ flex: 1, alignItems: 'flex-end' }}>
                 <Text
                   style={
-                    isPass(obtained.preLoad, limits.preLoad)
+                    isPass(obtained?.preLoad, limits?.preLoad)
                       ? styles.statusPass
                       : styles.statusFail
                   }
                 >
-                  {isPass(obtained.preLoad, limits.preLoad) ? 'PASS' : 'FAIL'}
+                  {isPass(obtained?.preLoad, limits?.preLoad) ? 'PASS' : 'FAIL'}
                 </Text>
               </View>
             </View>
@@ -648,23 +654,23 @@ const PDFDocument = ({ data }) => {
               </View>
               <View style={{ flex: 1.5, alignItems: 'flex-end' }}>
                 <Text style={styles.tableCell}>
-                  {formatNumber(obtained.separationLoad)} N
+                  {formatNumber(obtained?.separationLoad)} N
                 </Text>
               </View>
               <View style={{ flex: 1.5, alignItems: 'flex-end' }}>
                 <Text style={styles.tableCell}>
-                  {formatNumber(limits.separationLoad)} N (Min)
+                  {formatNumber(limits?.separationLoad)} N (Min)
                 </Text>
               </View>
               <View style={{ flex: 1, alignItems: 'flex-end' }}>
                 <Text
                   style={
-                    isPass(limits.separationLoad, obtained.separationLoad)
+                    isPass(limits?.separationLoad, obtained?.separationLoad)
                       ? styles.statusPass
                       : styles.statusFail
                   }
                 >
-                  {isPass(limits.separationLoad, obtained.separationLoad)
+                  {isPass(limits?.separationLoad, obtained?.separationLoad)
                     ? 'PASS'
                     : 'FAIL'}
                 </Text>
