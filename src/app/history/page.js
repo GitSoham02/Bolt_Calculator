@@ -9,9 +9,37 @@ import { useRouter } from 'next/navigation';
 
 export default function HistoryPage() {
   const router = useRouter();
-
   const [historyItems, setHistoryItems] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [errorMessage, setErrorMessage] = useState('');
   const { setHistoryIndex } = useResult();
+
+  useEffect(() => {
+    try {
+      const storedData = localStorage.getItem('boltResultHistory');
+      if (!storedData) {
+        setHistoryItems([]);
+        setIsLoading(false);
+        return;
+      }
+
+      const parsed = JSON.parse(storedData);
+      if (!Array.isArray(parsed)) {
+        setErrorMessage('Saved history data is invalid.');
+        setHistoryItems([]);
+        setIsLoading(false);
+        return;
+      }
+
+      setHistoryItems(parsed.slice(-5).reverse());
+      setIsLoading(false);
+    } catch (error) {
+      console.error('[HistoryPage] Failed to load history:', error);
+      setErrorMessage('Failed to load calculation history.');
+      setHistoryItems([]);
+      setIsLoading(false);
+    }
+  }, []);
 
   function handleViewReport(index) {
     // Calculate the actual index in localStorage (original array)
@@ -23,32 +51,23 @@ export default function HistoryPage() {
     router.push('/history/report');
   }
 
-  useEffect(() => {
-    const storedData = localStorage.getItem('boltResultHistory');
-    const boltHistoryData = JSON.parse(storedData) || [];
+  // const getStatus = (tensileStress, limit) => {
+  //   const utilization = (tensileStress / limit) * 100;
+  //   if (utilization > 80) return 'Marginal';
+  //   return 'Safe';
+  // };
 
-    // Get last 5 items, most recent first
-    const last5 = boltHistoryData.slice(-5).reverse();
-    setHistoryItems(last5);
-  }, []);
+  // const getStatusStyle = (tensileStress, limit) => {
+  //   const utilization = (tensileStress / limit) * 100;
+  //   if (utilization > 80) {
+  //     return 'bg-primary/10 text-primary';
+  //   }
+  //   return 'bg-green-100 dark:bg-green-500/20 text-green-700 dark:text-green-400';
+  // };
 
-  const getStatus = (tensileStress, limit) => {
-    const utilization = (tensileStress / limit) * 100;
-    if (utilization > 80) return 'Marginal';
-    return 'Safe';
-  };
-
-  const getStatusStyle = (tensileStress, limit) => {
-    const utilization = (tensileStress / limit) * 100;
-    if (utilization > 80) {
-      return 'bg-primary/10 text-primary';
-    }
-    return 'bg-green-100 dark:bg-green-500/20 text-green-700 dark:text-green-400';
-  };
-
-  const getSafetyFactor = (limit, tensileStress) => {
-    return (limit / tensileStress).toFixed(2);
-  };
+  // const getSafetyFactor = (limit, tensileStress) => {
+  //   return (limit / tensileStress).toFixed(2);
+  // };
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
@@ -80,7 +99,19 @@ export default function HistoryPage() {
           </div>
 
           <div className="space-y-4">
-            {historyItems.length === 0 ? (
+            {isLoading ? (
+              <div className="text-center py-12">
+                <p className="text-slate-500 dark:text-slate-400">
+                  Loading history...
+                </p>
+              </div>
+            ) : errorMessage ? (
+              <div className="text-center py-12">
+                <p className="text-slate-500 dark:text-slate-400">
+                  {errorMessage}
+                </p>
+              </div>
+            ) : historyItems.length === 0 ? (
               <div className="text-center py-12">
                 <p className="text-slate-500 dark:text-slate-400">
                   No calculation history available
@@ -88,18 +119,18 @@ export default function HistoryPage() {
               </div>
             ) : (
               historyItems.map((item, index) => {
-                const status = getStatus(
-                  item.obtainedValues.tensileStress,
-                  item.limits.tensileStress,
-                );
-                const statusStyle = getStatusStyle(
-                  item.obtainedValues.tensileStress,
-                  item.limits.tensileStress,
-                );
-                const safetyFactor = getSafetyFactor(
-                  item.limits.tensileStress,
-                  item.obtainedValues.tensileStress,
-                );
+                // const status = getStatus(
+                //   item.obtainedValues.tensileStress,
+                //   item.limits.tensileStress,
+                // );
+                // const statusStyle = getStatusStyle(
+                //   item.obtainedValues.tensileStress,
+                //   item.limits.tensileStress,
+                // );
+                // const safetyFactor = getSafetyFactor(
+                //   item.limits.tensileStress,
+                //   item.obtainedValues.tensileStress,
+                // );
 
                 return (
                   <div
@@ -155,11 +186,7 @@ export default function HistoryPage() {
                       <div className="flex items-end">
                         <button
                           type="button"
-                          className={`w-full md:w-auto px-6 py-2.5 ${
-                            status === 'Safe'
-                              ? 'bg-primary/10 dark:bg-primary/20 text-primary hover:bg-primary hover:text-white'
-                              : 'bg-primary text-white hover:opacity-90'
-                          } transition-all rounded-lg text-sm font-bold flex items-center justify-center gap-2`}
+                          className={`w-full md:w-auto px-6 py-2.5 bg-primary/10 dark:bg-primary/20 text-primary hover:bg-primary hover:text-white transition-all rounded-lg text-sm font-bold flex items-center justify-center gap-2`}
                           onClick={() => handleViewReport(index)}
                         >
                           View Report

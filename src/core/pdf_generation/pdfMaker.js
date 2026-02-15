@@ -1,5 +1,3 @@
-import fs from 'node:fs/promises';
-import path from 'node:path';
 import puppeteer from 'puppeteer';
 import { buildHTMLReport } from './pdfTemplate.js';
 
@@ -23,18 +21,9 @@ export async function generatePDF(result) {
 
   await page.setContent(html, { waitUntil: 'networkidle0' });
 
-  const outputPath = path.join(
-    process.cwd(),
-    'src',
-    'core',
-    'data',
-    'bolt-report.pdf',
-  );
-
   const pdfBuffer = await page.pdf({
     format: 'A4',
     printBackground: true,
-    path: outputPath,
   });
 
   await browser.close();
