@@ -21,9 +21,33 @@ export async function generatePDF(result) {
     const isVercel = !!process.env.VERCEL || !!process.env.VERCEL_ENV;
 
     let executablePath;
+    let launchArgs;
+    
     if (isVercel) {
       // Running in Vercel - use chromium from @sparticuz/chromium
-      executablePath = await chromium.executablePath();
+      console.log('[PDF] Configuring for Vercel serverless environment...');
+      
+      try {
+        // Configure chromium for serverless with proper options
+        executablePath = await chromium.executablePath({
+          // This helps with finding the binaries in Vercel
+          ...(process.env.FONTCONFIG_PATH && { FONTCONFIG_PATH: process.env.FONTCONFIG_PATH }),
+        });
+        
+        launchArgs = [
+          ...chromium.args,
+          '--disable-gpu',
+          '--disable-dev-shm-usage',
+          '--disable-setuid-sandbox',
+          '--no-first-run',
+          '--no-sandbox',
+          '--no-zygote',
+          '--single-process',
+        ];
+      } catch (error) {
+        console.error('[PDF] Error getting chromium path:', error);
+        throw new Error(`Failed to configure Chromium: ${error.message}`);
+      }
     } else {
       // Running locally - find local Chrome
       const possiblePaths = [];
@@ -60,18 +84,20 @@ export async function generatePDF(result) {
             'Please install Google Chrome or set CHROME_PATH environment variable.',
         );
       }
+      
+      launchArgs = ['--no-sandbox', '--disable-setuid-sandbox'];
     }
 
     console.log('[PDF] Is Vercel:', isVercel);
     console.log('[PDF] Executable path:', executablePath);
+    console.log('[PDF] Launch args:', launchArgs?.slice(0, 3).join(', '), '...');
 
     browser = await puppeteer.launch({
-      args: isVercel
-        ? chromium.args
-        : ['--no-sandbox', '--disable-setuid-sandbox'],
+      args: launchArgs,
       defaultViewport: chromium.defaultViewport,
       executablePath: executablePath,
-      headless: isVercel ? chromium.headless : true,
+      headless: true,
+      ignoreHTTPSErrors: true,
     });
 
     console.log('[PDF] Browser launched successfully');
