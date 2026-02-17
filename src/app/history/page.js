@@ -9,11 +9,10 @@ import { useRouter } from 'next/navigation';
 
 export default function HistoryPage() {
   const router = useRouter();
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [historyItems, setHistoryItems] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState('');
-  const { setHistoryIndex } = useResult();
+  const { setHistoryIndex, isMobileMenuOpen, setIsMobileMenuOpen } = useResult();
 
   useEffect(() => {
     try {
@@ -83,13 +82,31 @@ export default function HistoryPage() {
 
   return (
     <div className="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 min-h-screen flex fixed inset-0 m-0 p-0 overflow-hidden">
-      <Dashboard
-        isMobileMenuOpen={isMobileMenuOpen}
-        setIsMobileMenuOpen={setIsMobileMenuOpen}
-      />
+      {/* Desktop Sidebar - Always visible on lg+ screens */}
+      <aside className="hidden lg:flex lg:w-64 border-r border-border-light dark:border-border-dark bg-surface-light dark:bg-surface-dark flex-col mt-16 overflow-y-auto">
+        <Dashboard />
+      </aside>
+
+      {/* Mobile Overlay Sidebar - Only visible when menu is open on mobile */}
+      {isMobileMenuOpen && (
+        <div className="fixed inset-0 z-50 lg:hidden flex">
+          {/* Backdrop */}
+          <div
+            className="absolute inset-0 bg-black/50"
+            onClick={() => setIsMobileMenuOpen(false)}
+          />
+          {/* Menu */}
+          <aside className="relative w-64 h-full bg-surface-light dark:bg-surface-dark flex flex-col overflow-y-auto">
+            <Dashboard
+              isMobileMenuOpen={true}
+              setIsMobileMenuOpen={setIsMobileMenuOpen}
+            />
+          </aside>
+        </div>
+      )}
 
       <main className="flex-1 flex flex-col min-w-0 overflow-y-auto">
-        <NavBar onMobileMenuOpen={() => setIsMobileMenuOpen(true)} />
+        <NavBar />
         <div className="p-4 sm:p-6 md:p-8 max-w-5xl mx-auto w-full">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
             <div>

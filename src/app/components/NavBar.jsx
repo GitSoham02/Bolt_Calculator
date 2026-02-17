@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import { useResult } from '../context/ResultContext';
 
 function NavBar({
   variant = 'sidebar',
@@ -9,8 +10,10 @@ function NavBar({
   brandName = 'Bolt',
   brandHighlight = 'Calculator',
   showSocialLinks = false,
-  onMobileMenuOpen = null,
 }) {
+  const { setIsMobileMenuOpen } = useResult();
+  // console.log(onMobileMenuOpen);
+
   const [isDarkMode, setIsDarkMode] = useState(
     typeof document !== 'undefined' &&
       document.documentElement.classList.contains('dark'),
@@ -19,6 +22,10 @@ function NavBar({
   const toggleDarkMode = () => {
     document.documentElement.classList.toggle('dark');
     setIsDarkMode((prev) => !prev);
+  };
+
+  const openMobileMenu = () => {
+    setIsMobileMenuOpen(true);
   };
 
   // Horizontal navbar variant for marketing pages
@@ -88,10 +95,13 @@ function NavBar({
               </h1>
             </div>
           </Link>
-          <div className="flex items-center md:hidden">
+          <div className="flex items-center lg:hidden">
             <button
               type="button"
-              onClick={() => onMobileMenuOpen && onMobileMenuOpen()}
+              onClick={() => {
+                console.log('clicked');
+                openMobileMenu();
+              }}
               className="p-2 -mr-2 cursor-pointer material-icons-round text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 transition-colors"
               aria-label="Open menu"
             >

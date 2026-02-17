@@ -38,6 +38,7 @@ export function ResultProvider({ children }) {
   const [isLoading, setIsLoading] = useState(false);
   const [resultHistory, setResultHistory] = useState(initializeResultHistory);
   const [historyIndex, setHistoryIndex] = useState();
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const setResult = (data, userInputData) => {
     console.log(
@@ -91,6 +92,8 @@ export function ResultProvider({ children }) {
         resultHistory,
         historyIndex,
         setHistoryIndex,
+        isMobileMenuOpen,
+        setIsMobileMenuOpen,
       }}
     >
       {children}
