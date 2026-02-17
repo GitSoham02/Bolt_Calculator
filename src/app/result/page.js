@@ -9,7 +9,13 @@ import Image from 'next/image';
 
 export default function ResultPage() {
   const router = useRouter();
-  const { result, clearResult, userInput, isMobileMenuOpen, setIsMobileMenuOpen } = useResult();
+  const {
+    result,
+    clearResult,
+    userInput,
+    isMobileMenuOpen,
+    setIsMobileMenuOpen,
+  } = useResult();
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
 
@@ -150,7 +156,7 @@ export default function ResultPage() {
   // Prepare bolt data for display
   const boltData = {
     specification: boltDesc.designation,
-    propertyClass: `${boltProperty.xValue}.${boltProperty.yValue}`,
+    propertyClass: `${boltProperty.xValue + boltProperty.yValue}`,
     nominalDiameter: boltDesc.nominalDiameter.toFixed(2),
     threadMeanDiameter: boltDesc.threadMeanDiameter.toFixed(3),
     tensileStressArea: boltDesc.tensileStressArea.toFixed(1),
