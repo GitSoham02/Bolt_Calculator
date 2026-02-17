@@ -12,7 +12,8 @@ export default function HistoryPage() {
   const [historyItems, setHistoryItems] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState('');
-  const { setHistoryIndex, isMobileMenuOpen, setIsMobileMenuOpen } = useResult();
+  const { setHistoryIndex, isMobileMenuOpen, setIsMobileMenuOpen } =
+    useResult();
 
   useEffect(() => {
     try {
