@@ -11,8 +11,15 @@ import { useState } from 'react';
 
 export default function InputPage() {
   const router = useRouter();
-  const { userInput, setUserInput, setResult, setIsLoading, isLoading } =
-    useResult();
+  const {
+    userInput,
+    setUserInput,
+    setResult,
+    setIsLoading,
+    isLoading,
+    isMobileMenuOpen,
+    setIsMobileMenuOpen,
+  } = useResult();
   const [formData, setFormData] = useState({
     plateThickness: '',
     engagedThreadLength: '',
@@ -99,7 +106,25 @@ export default function InputPage() {
 
   return (
     <div className="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 min-h-screen flex fixed inset-0 m-0 p-0 overflow-hidden">
-      <Dashboard />
+      {/* Desktop Sidebar - Always visible on lg+ screens */}
+      <aside className="hidden lg:flex lg:w-64 border-r border-border-light dark:border-border-dark bg-surface-light dark:bg-surface-dark flex-col mt-16 overflow-y-auto">
+        <Dashboard />
+      </aside>
+
+      {/* Mobile Overlay Sidebar - Only visible when menu is open on mobile */}
+      {isMobileMenuOpen && (
+        <div className="fixed inset-0 z-50 lg:hidden flex">
+          {/* Backdrop */}
+          <div
+            className="absolute inset-0 bg-black/50"
+            onClick={() => setIsMobileMenuOpen(false)}
+          />
+          {/* Menu */}
+          <aside className="relative w-64 h-full bg-surface-light dark:bg-surface-dark flex flex-col overflow-y-auto">
+            <Dashboard />
+          </aside>
+        </div>
+      )}
 
       {/* Main Content */}
       <main className="flex-1 flex flex-col min-w-0 overflow-y-auto">

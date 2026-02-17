@@ -9,7 +9,7 @@ import Image from 'next/image';
 
 export default function ResultPage() {
   const router = useRouter();
-  const { result, clearResult, userInput } = useResult();
+  const { result, clearResult, userInput, isMobileMenuOpen, setIsMobileMenuOpen } = useResult();
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
 
@@ -221,7 +221,25 @@ export default function ResultPage() {
 
   return (
     <div className="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 min-h-screen flex fixed inset-0 m-0 p-0 overflow-hidden">
-      <Dashboard />
+      {/* Desktop Sidebar - Always visible on lg+ screens */}
+      <aside className="hidden lg:flex lg:w-64 border-r border-border-light dark:border-border-dark bg-surface-light dark:bg-surface-dark flex-col mt-16 overflow-y-auto">
+        <Dashboard />
+      </aside>
+
+      {/* Mobile Overlay Sidebar - Only visible when menu is open on mobile */}
+      {isMobileMenuOpen && (
+        <div className="fixed inset-0 z-50 lg:hidden flex">
+          {/* Backdrop */}
+          <div
+            className="absolute inset-0 bg-black/50"
+            onClick={() => setIsMobileMenuOpen(false)}
+          />
+          {/* Menu */}
+          <aside className="relative w-64 h-full bg-surface-light dark:bg-surface-dark flex flex-col overflow-y-auto">
+            <Dashboard />
+          </aside>
+        </div>
+      )}
 
       <main className="flex-1 flex flex-col min-w-0 overflow-y-auto">
         <div className="flex-1 max-w-7xl mx-auto px-3 mt-16 sm:px-4 md:px-6 lg:px-8 py-4 sm:py-6 md:py-8 w-full">
