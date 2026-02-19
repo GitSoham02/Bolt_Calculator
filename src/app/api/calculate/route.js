@@ -1,11 +1,13 @@
 import { NextResponse } from 'next/server';
 import fs from 'fs/promises';
 import path from 'path';
-import boltAnalysis from '@/core/runAnalysis';
+import boltAnalysis from '@/core/runAnalysis_V2';
+import { validate } from '@/lib/utils/validate';
+import { userInputSchema } from '@/lib/validation/input.schema.js';
 
 // Resolve project root safely
-const DATA_DIR = path.join(process.cwd(), 'src', 'app', 'data', 'debug');
-const INPUT_FILE = path.join(DATA_DIR, 'userInput.json');
+// const DATA_DIR = path.join(process.cwd(), 'src', 'app', 'data', 'debug');
+// const INPUT_FILE = path.join(DATA_DIR, 'userInput.json');
 
 export async function POST(req) {
   try {
@@ -13,12 +15,27 @@ export async function POST(req) {
     const input = await req.json();
 
     // 2. Basic sanity check (minimal validation)
-    if (!input || typeof input !== 'object') {
+    const validated = validate(userInputSchema, input);
+
+    if (!validated.success) {
       return NextResponse.json(
-        { error: 'Invalid input payload' },
+        {
+          success: false,
+          error: 'Validation failed',
+          details: validated.errors,
+        },
         { status: 400 },
       );
     }
+
+    const validatedInput = validated.data;
+
+    // if (!input || typeof input !== 'object') {
+    //   return NextResponse.json(
+    //     { error: 'Invalid input payload' },
+    //     { status: 400 },
+    //   );
+    // }
 
     // // 3. Ensure debug directory exists
     // await fs.mkdir(DATA_DIR, { recursive: true });
@@ -27,8 +44,8 @@ export async function POST(req) {
     // await fs.writeFile(INPUT_FILE, JSON.stringify(input, null, 2), 'utf-8');
 
     // 4. Real result from calculations - uncomment after writing calculation part
-    console.log('[API] Starting bolt analysis with input:', input);
-    const result = await boltAnalysis(input);
+    console.log('[API] Starting bolt analysis with input:', validatedInput);
+    const result = await boltAnalysis(validatedInput);
     console.log('[API] Bolt analysis completed successfully');
     return NextResponse.json(result);
 

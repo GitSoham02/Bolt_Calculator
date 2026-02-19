@@ -1,30 +1,47 @@
 import { NextResponse } from 'next/server';
 import { generatePDF } from '@/core/pdf_generation/pdfMaker';
+import { validate } from '@/lib/utils/validate';
+import { pdfSchema } from '@/lib/validation/pdf.schema';
 
 export async function POST(req) {
   console.log('[PDF API] Received PDF generation request');
 
   try {
     // Parse request body
-    const input = await req.json();
-    console.log('[PDF API] Request data received:', {
-      hasCurBolt: !!input?.curBolt,
-      hasCurBoltProperty: !!input?.curBoltProperty,
-      hasUserData: !!input?.userData,
-    });
+    const body = await req.json();
+    // console.log('[PDF API] Request data received:', {
+    //   hasCurBolt: !!input?.curBolt,
+    //   hasCurBoltProperty: !!input?.curBoltProperty,
+    //   hasUserData: !!input?.userData,
+    // });
 
-    // Validate input
-    if (!input || typeof input !== 'object') {
-      console.error('[PDF API] Invalid input payload');
+    // // Validate input
+    // if (!input || typeof input !== 'object') {
+    //   console.error('[PDF API] Invalid input payload');
+    //   return NextResponse.json(
+    //     { error: 'Invalid input payload' },
+    //     { status: 400 },
+    //   );
+    // }
+
+    // ZOD VALIDATION
+    const validated = validate(pdfSchema, body);
+
+    if (!validated.success) {
       return NextResponse.json(
-        { error: 'Invalid input payload' },
+        {
+          success: false,
+          error: 'Invalid PDF payload',
+          details: validated.errors,
+        },
         { status: 400 },
       );
     }
 
+    const data = validated.data;
     // Generate PDF
     console.log('[PDF API] Calling generatePDF...');
-    const pdfBuffer = await generatePDF(input);
+    const pdfBuffer = await generatePDF(data);
 
     if (!pdfBuffer || pdfBuffer.length === 0) {
       throw new Error('PDF generation returned empty buffer');

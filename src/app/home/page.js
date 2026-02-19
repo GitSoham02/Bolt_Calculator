@@ -70,7 +70,7 @@ export default function HomePage() {
 
   return (
     <>
-      <div className="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 selection:bg-primary/20">
+      <div className="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 selection:bg-primary/20 scrollbar-hide">
         <NavBar
           variant="horizontal"
           icon="build"

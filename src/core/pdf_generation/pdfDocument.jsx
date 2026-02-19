@@ -239,9 +239,11 @@ const styles = StyleSheet.create({
 const PDFDocument = ({ data }) => {
   // Debug logging
   console.log('[PDFDocument] Received data:', {
-    hasUserData: !!data?.userData,
-    userDataKeys: data?.userData ? Object.keys(data.userData) : [],
-    userData: data?.userData,
+    hasUserInputData: !!data?.userInputData,
+    userInputDataKeys: data?.userInputData
+      ? Object.keys(data.userInputData)
+      : [],
+    userInputData: data?.userInputData,
     hasCurBolt: !!data?.curBolt,
     hasCurBoltProperty: !!data?.curBoltProperty,
     hasObtainedValues: !!data?.obtainedValues,
@@ -269,7 +271,7 @@ const PDFDocument = ({ data }) => {
     return `BCP-${yyyy}${mm}${dd}-AUTO`;
   };
 
-  const userData = data.userData || {};
+  const userData = data.userInputData || {};
   const curBolt = data.curBolt || {};
   const curBoltProperty = data.curBoltProperty || {};
   const obtained = data.obtainedValues || {};

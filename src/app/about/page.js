@@ -48,7 +48,7 @@ export default function AboutPage() {
 
   const sohamInfo = {
     name: 'Soham Jagtap',
-    designation: 'LEAD SOFTWARE ARCHITECHT',
+    designation: 'LEAD SOFTWARE ENGINEER',
     description:
       'A software engineer skilled at solving complex problems and designing scalable, sustainable solutions that stand the test of time. I specialize in building systems that are efficient, maintainable, and aligned with real-world needs. With a strong focus on clean architecture and thoughtful design, I aim to create technology that delivers long-term value. ',
     image: '/soham_image.png',
