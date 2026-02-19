@@ -249,9 +249,9 @@ function HistoryReportContent() {
     console.log('[Report] bolt object:', bolt);
     console.log('[Report] bolt.userInputData:', bolt.userInputData);
     const { userInputData, ...rest } = bolt;
-    const boltData = { ...rest, userData: userInputData };
+    const boltData = { ...rest, userInputData };
     console.log('[Report] Requesting PDF generation:', boltData);
-    console.log('[Report] boltData.userData:', boltData.userData);
+    console.log('[Report] boltData.userInputData:', boltData.userInputData);
     setIsExporting(true);
 
     try {
@@ -315,7 +315,7 @@ function HistoryReportContent() {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Breadcrumbs & Report Header */}
         <div className="mb-8 flex flex-col md:flex-row md:items-end justify-between gap-4">
-          <div className="w-full">
+          <div className="w-auto">
             <nav className="flex items-center gap-2 text-sm text-slate-500 mb-2">
               <Link
                 href="/history"

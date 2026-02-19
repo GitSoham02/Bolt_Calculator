@@ -82,149 +82,152 @@ export default function HistoryPage() {
   };
 
   return (
-    <div className="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 min-h-screen flex fixed inset-0 m-0 p-0 overflow-hidden">
-      {/* Desktop Sidebar - Always visible on lg+ screens */}
-      <aside className="hidden lg:flex lg:w-64 border-r border-border-light dark:border-border-dark bg-surface-light dark:bg-surface-dark flex-col mt-16 overflow-y-auto">
-        <Dashboard />
-      </aside>
+    <div className="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 min-h-screen flex flex-col fixed inset-0 m-0 p-0 overflow-hidden">
+      <NavBar />
+      <div className="flex flex-row flex-1 min-h-0 p-0 m-0">
+        {/* Desktop Sidebar - Always visible on lg+ screens */}
+        <aside className="hidden lg:flex lg:w-64 border-r border-border-light dark:border-border-dark bg-surface-light dark:bg-surface-dark flex-col overflow-y-auto">
+          <Dashboard />
+        </aside>
 
-      {/* Mobile Overlay Sidebar - Only visible when menu is open on mobile */}
-      {isMobileMenuOpen && (
-        <div className="fixed inset-0 z-50 lg:hidden flex">
-          {/* Backdrop */}
-          <div
-            className="absolute inset-0 bg-black/50"
-            onClick={() => setIsMobileMenuOpen(false)}
-          />
-          {/* Menu */}
-          <aside className="relative w-64 h-full bg-surface-light dark:bg-surface-dark flex flex-col overflow-y-auto">
-            <Dashboard
-              isMobileMenuOpen={true}
-              setIsMobileMenuOpen={setIsMobileMenuOpen}
+        {/* Mobile Overlay Sidebar - Only visible when menu is open on mobile */}
+        {isMobileMenuOpen && (
+          <div className="fixed inset-0 z-50 lg:hidden flex">
+            {/* Backdrop */}
+            <div
+              className="absolute inset-0 bg-black/50"
+              onClick={() => setIsMobileMenuOpen(false)}
             />
-          </aside>
-        </div>
-      )}
-
-      <main className="flex-1 flex flex-col min-w-0 overflow-y-auto">
-        <NavBar />
-        <div className="p-4 sm:p-6 md:p-8 max-w-5xl mx-auto w-full">
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
-            <div>
-              <h2 className="text-3xl font-black tracking-tight text-slate-900 dark:text-white">
-                Calculation History
-              </h2>
-              <p className="text-slate-500 dark:text-slate-400 mt-1">
-                Review and manage past industrial bolt load calculations
-              </p>
-            </div>
+            {/* Menu */}
+            <aside className="relative w-64 h-full bg-surface-light dark:bg-surface-dark flex flex-col overflow-y-auto">
+              <Dashboard
+                isMobileMenuOpen={true}
+                setIsMobileMenuOpen={setIsMobileMenuOpen}
+              />
+            </aside>
           </div>
+        )}
 
-          <div className="space-y-4">
-            {isLoading ? (
-              <div className="text-center py-12">
-                <p className="text-slate-500 dark:text-slate-400">
-                  Loading history...
+        <main className="flex-1 flex flex-col min-w-0 overflow-y-auto scrollbar-hide">
+          <div className="p-4 sm:p-6 md:p-8 max-w-5xl mx-auto w-full">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
+              <div>
+                <h2 className="text-3xl font-black tracking-tight text-slate-900 dark:text-white">
+                  Calculation History
+                </h2>
+                <p className="text-slate-500 dark:text-slate-400 mt-1">
+                  Review and manage past industrial bolt load calculations
                 </p>
               </div>
-            ) : errorMessage ? (
-              <div className="text-center py-12">
-                <p className="text-slate-500 dark:text-slate-400">
-                  {errorMessage}
-                </p>
-              </div>
-            ) : historyItems.length === 0 ? (
-              <div className="text-center py-12">
-                <p className="text-slate-500 dark:text-slate-400">
-                  No calculation history available
-                </p>
-              </div>
-            ) : (
-              historyItems.map((item, index) => {
-                // const status = getStatus(
-                //   item.obtainedValues.tensileStress,
-                //   item.limits.tensileStress,
-                // );
-                // const statusStyle = getStatusStyle(
-                //   item.obtainedValues.tensileStress,
-                //   item.limits.tensileStress,
-                // );
-                // const safetyFactor = getSafetyFactor(
-                //   item.limits.tensileStress,
-                //   item.obtainedValues.tensileStress,
-                // );
+            </div>
 
-                return (
-                  <div
-                    key={index}
-                    className="group bg-white dark:bg-[#2a1d17] p-6 rounded-xl border border-slate-200 dark:border-white/5 hover:border-primary/50 transition-all shadow-sm"
-                  >
-                    <div className="flex flex-col md:flex-row justify-between gap-4">
-                      <div className="flex-1">
-                        <h3 className="text-xl font-bold dark:text-white mb-1">
-                          Selected Bolt - {item.curBolt.designation}
-                        </h3>
-                        <p className="text-sm text-slate-500 dark:text-slate-400 mb-4 flex items-center gap-2">
-                          <span className="material-symbols-outlined text-base">
-                            schedule
-                          </span>
-                          {formatDate(item.userInputData.calculatedAt)}
-                        </p>
-                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 pt-4 border-t border-slate-100 dark:border-white/5">
-                          <div>
-                            <p className="text-[10px] uppercase font-bold text-slate-400 tracking-widest">
-                              Plate Thickness
-                            </p>
-                            <p className="text-sm font-semibold dark:text-slate-200">
-                              {item.userInputData.plateThickness.toFixed(2)} mm
-                            </p>
-                          </div>
-                          <div>
-                            <p className="text-[10px] uppercase font-bold text-slate-400 tracking-widest">
-                              External Load
-                            </p>
-                            <p className="text-sm font-semibold dark:text-slate-200">
-                              {item.userInputData.externalLoad} N
-                            </p>
-                          </div>
-                          <div>
-                            <p className="text-[10px] uppercase font-bold text-slate-400 tracking-widest">
-                              Grade
-                            </p>
-                            <p className="text-sm font-semibold dark:text-slate-200">
-                              {item.curBoltProperty.className}
-                            </p>
-                          </div>
-                          <div>
-                            <p className="text-[10px] uppercase font-bold text-slate-400 tracking-widest">
-                              Bolt Diameter
-                            </p>
-                            <p className="text-sm font-semibold dark:text-slate-200">
-                              {item.curBolt.nominalDiameter} mm
-                            </p>
+            <div className="space-y-4">
+              {isLoading ? (
+                <div className="text-center py-12">
+                  <p className="text-slate-500 dark:text-slate-400">
+                    Loading history...
+                  </p>
+                </div>
+              ) : errorMessage ? (
+                <div className="text-center py-12">
+                  <p className="text-slate-500 dark:text-slate-400">
+                    {errorMessage}
+                  </p>
+                </div>
+              ) : historyItems.length === 0 ? (
+                <div className="text-center py-12">
+                  <p className="text-slate-500 dark:text-slate-400">
+                    No calculation history available
+                  </p>
+                </div>
+              ) : (
+                historyItems.map((item, index) => {
+                  // const status = getStatus(
+                  //   item.obtainedValues.tensileStress,
+                  //   item.limits.tensileStress,
+                  // );
+                  // const statusStyle = getStatusStyle(
+                  //   item.obtainedValues.tensileStress,
+                  //   item.limits.tensileStress,
+                  // );
+                  // const safetyFactor = getSafetyFactor(
+                  //   item.limits.tensileStress,
+                  //   item.obtainedValues.tensileStress,
+                  // );
+
+                  return (
+                    <div
+                      key={index}
+                      className="group bg-white dark:bg-[#2a1d17] p-6 rounded-xl border border-slate-200 dark:border-white/5 hover:border-primary/50 transition-all shadow-sm"
+                    >
+                      <div className="flex flex-col md:flex-row justify-between gap-4">
+                        <div className="flex-1">
+                          <h3 className="text-xl font-bold dark:text-white mb-1">
+                            Selected Bolt - {item.curBolt.designation}
+                          </h3>
+                          <p className="text-sm text-slate-500 dark:text-slate-400 mb-4 flex items-center gap-2">
+                            <span className="material-symbols-outlined text-base">
+                              schedule
+                            </span>
+                            {formatDate(item.userInputData.calculatedAt)}
+                          </p>
+                          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 pt-4 border-t border-slate-100 dark:border-white/5">
+                            <div>
+                              <p className="text-[10px] uppercase font-bold text-slate-400 tracking-widest">
+                                Plate Thickness
+                              </p>
+                              <p className="text-sm font-semibold dark:text-slate-200">
+                                {item.userInputData.plateThickness.toFixed(2)}{' '}
+                                mm
+                              </p>
+                            </div>
+                            <div>
+                              <p className="text-[10px] uppercase font-bold text-slate-400 tracking-widest">
+                                External Load
+                              </p>
+                              <p className="text-sm font-semibold dark:text-slate-200">
+                                {item.userInputData.externalLoad} N
+                              </p>
+                            </div>
+                            <div>
+                              <p className="text-[10px] uppercase font-bold text-slate-400 tracking-widest">
+                                Grade
+                              </p>
+                              <p className="text-sm font-semibold dark:text-slate-200">
+                                {item.curBoltProperty.className}
+                              </p>
+                            </div>
+                            <div>
+                              <p className="text-[10px] uppercase font-bold text-slate-400 tracking-widest">
+                                Bolt Diameter
+                              </p>
+                              <p className="text-sm font-semibold dark:text-slate-200">
+                                {item.curBolt.nominalDiameter} mm
+                              </p>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                      <div className="flex items-end">
-                        <button
-                          type="button"
-                          className={`w-full md:w-auto px-6 py-2.5 bg-primary/10 dark:bg-primary/20 text-primary hover:bg-primary hover:text-white transition-all rounded-lg text-sm font-bold flex items-center justify-center gap-2`}
-                          onClick={() => handleViewReport(index)}
-                        >
-                          View Report
-                          <span className="material-symbols-outlined text-base">
-                            arrow_forward
-                          </span>
-                        </button>
+                        <div className="flex items-end">
+                          <button
+                            type="button"
+                            className={`w-full md:w-auto px-6 py-2.5 bg-primary/10 dark:bg-primary/20 text-primary hover:bg-primary hover:text-white transition-all rounded-lg text-sm font-bold flex items-center justify-center gap-2`}
+                            onClick={() => handleViewReport(index)}
+                          >
+                            View Report
+                            <span className="material-symbols-outlined text-base">
+                              arrow_forward
+                            </span>
+                          </button>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                );
-              })
-            )}
+                  );
+                })
+              )}
+            </div>
           </div>
-        </div>
-      </main>
+        </main>
+      </div>
     </div>
   );
 }

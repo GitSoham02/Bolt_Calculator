@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import { useState } from 'react';
 
 export default function Footer({
   icon = 'build',
@@ -9,6 +10,36 @@ export default function Footer({
   tagline = 'The industrial standard for precision bolt load verification.',
   showSocialLinks = false,
 }) {
+  const [copiedTarget, setCopiedTarget] = useState(null);
+
+  const contactEmail = 'jsoham672@gmail.com';
+  const websiteUrl = 'https://bolt-calculator.vercel.app/';
+
+  const handleCopyEmail = (email, targetId) => {
+    copyToClipboard(email)
+      .then(() => {
+        setCopiedTarget(targetId);
+        setTimeout(() => setCopiedTarget(null), 2000);
+      })
+      .catch(() => {
+        console.error('Failed to copy email');
+      });
+  };
+  const handleCopyWebsiteURL = (webUrl, targetId) => {
+    copyToClipboard(webUrl)
+      .then(() => {
+        setCopiedTarget(targetId);
+        setTimeout(() => setCopiedTarget(null), 2000);
+      })
+      .catch(() => {
+        console.error('Failed to copy email');
+      });
+  };
+
+  const copyToClipboard = (content) => {
+    return navigator.clipboard.writeText(content);
+  };
+
   return (
     <footer className="w-full bg-white dark:bg-background-dark py-20 border-t border-border-light dark:border-border-dark">
       <div className="max-w-7xl mx-auto px-6">
@@ -30,22 +61,34 @@ export default function Footer({
             </p>
             {showSocialLinks && (
               <div className="flex gap-4">
-                <a
-                  className="w-10 h-10 rounded-full border border-border-light dark:border-border-dark flex items-center justify-center text-slate-400 hover:text-primary hover:border-primary transition-all duration-300"
-                  href="#"
+                <button
+                  className="relative w-10 h-10 rounded-full border border-border-light dark:border-border-dark flex items-center justify-center text-slate-400 hover:text-primary hover:border-primary transition-all duration-300"
+                  onClick={() =>
+                    handleCopyWebsiteURL(websiteUrl, 'website link')
+                  }
                 >
                   <span className="material-symbols-outlined text-xl">
                     share
                   </span>
-                </a>
-                <a
-                  className="w-10 h-10 rounded-full border border-border-light dark:border-border-dark flex items-center justify-center text-slate-400 hover:text-primary hover:border-primary transition-all duration-300"
-                  href="#"
+                  {copiedTarget === 'website link' && (
+                    <span className="absolute z-10 top-full left-1/2 transform -translate-x-1/2 mt-2 px-3 py-1 bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 text-xs rounded whitespace-nowrap shadow-lg">
+                      Website link copied!
+                    </span>
+                  )}
+                </button>
+                <button
+                  className="relative w-10 h-10 rounded-full border border-border-light dark:border-border-dark flex items-center justify-center text-slate-400 hover:text-primary hover:border-primary transition-all duration-300"
+                  onClick={() => handleCopyEmail(contactEmail, 'contact2')}
                 >
                   <span className="material-symbols-outlined text-xl">
                     mail
                   </span>
-                </a>
+                  {copiedTarget === 'contact2' && (
+                    <span className="absolute z-10 top-full left-1/2 transform -translate-x-1/2 mt-2 px-3 py-1 bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 text-xs rounded whitespace-nowrap shadow-lg">
+                      Email copied!
+                    </span>
+                  )}
+                </button>
               </div>
             )}
           </div>
@@ -105,27 +148,22 @@ export default function Footer({
                   About Us
                 </Link>
               </li>
-              {/* <li>
-                <a
-                  className="hover:text-primary transition-colors flex items-center gap-2"
-                  href="#"
-                >
-                  <span className="material-symbols-outlined text-xs">
-                    gavel
-                  </span>{' '}
-                  Terms of Service
-                </a>
-              </li> */}
+
               <li>
-                <a
-                  className="hover:text-primary transition-colors flex items-center gap-2"
-                  href="#"
+                <button
+                  className="relative hover:text-primary transition-colors flex items-center gap-2"
+                  onClick={() => handleCopyEmail(contactEmail, 'contact')}
                 >
                   <span className="material-symbols-outlined text-xs">
                     support_agent
                   </span>{' '}
                   Contact Support
-                </a>
+                  {copiedTarget === 'contact' && (
+                    <span className="absolute z-10 top-full left-1/2 transform -translate-x-1/2 mt-2 px-3 py-1 bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 text-xs rounded whitespace-nowrap shadow-lg">
+                      Email copied!
+                    </span>
+                  )}
+                </button>
               </li>
             </ul>
           </div>

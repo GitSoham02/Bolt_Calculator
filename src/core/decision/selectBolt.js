@@ -11,19 +11,19 @@ export default function boltSelection(obtainedValues, limits) {
     }
 
     // shear stress check
-    if (limits.shearStess < obtainedValues.shearStress) {
+    if (limits.shearStress < obtainedValues.shearStress) {
       console.log('[selectBolt] ✗ Failed: shear stress check');
       return false;
     }
 
     //   plate bearing stress check
-    if (limits.plateBearingStess < obtainedValues.plateBearingStess) {
+    if (limits.plateBearingStress < obtainedValues.plateBearingStress) {
       console.log('[selectBolt] ✗ Failed: plate bearing stress check');
       return false;
     }
 
     // thread shear stress check
-    if (limits.threadShearStess < obtainedValues.threadShearStess) {
+    if (limits.threadShearStress < obtainedValues.threadShearStress) {
       console.log('[selectBolt] ✗ Failed: thread shear stress check');
       return false;
     }
