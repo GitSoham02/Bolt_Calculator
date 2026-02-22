@@ -3,7 +3,11 @@
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 import { useState, useEffect, Suspense } from 'react';
-import { Superscript } from 'lucide-react';
+import ReportHeader from '../../components/report/ReportHeader';
+import UserInputData from '../../components/report/UserInputData';
+import SelectedBolt from '../../components/report/SelectedBolt';
+import LoadVerificationTable from '../../components/report/LoadVerificationTable';
+import ReportCTA from '../../components/report/ReportCTA';
 
 function HistoryReportContent() {
   const router = useRouter();
@@ -313,209 +317,23 @@ function HistoryReportContent() {
     <div className="bg-background-light dark:bg-background-dark text-slate-900 dark:text-slate-100 min-h-screen">
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Breadcrumbs & Report Header */}
-        <div className="mb-8 flex flex-col md:flex-row md:items-end justify-between gap-4">
-          <div className="w-auto">
-            <nav className="flex items-center gap-2 text-sm text-slate-500 mb-2">
-              <Link
-                href="/history"
-                className="hover:text-primary transition-colors"
-              >
-                History
-              </Link>
-              <span className="material-symbols-outlined text-[16px]">
-                chevron_right
-              </span>
-              <span className="text-slate-900 dark:text-slate-200 font-medium">
-                Analysis Report: {reportData.boltName}
-              </span>
-            </nav>
-            <h2 className="text-3xl font-black text-slate-900 dark:text-white tracking-tight">
-              Analysis Report: {reportData.boltName}
-            </h2>
-            <div className="flex items-center gap-4 mt-2 flex-wrap">
-              <span className="flex items-center gap-1.5 text-sm text-slate-500 bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded">
-                <span className="material-symbols-outlined text-[16px]">
-                  tag
-                </span>
-                Ref: #{reportData.refId}
-              </span>
-              <span className="flex items-center gap-1.5 text-sm text-slate-500 bg-slate-100 dark:bg-slate-800 px-2 py-1 rounded">
-                <span className="material-symbols-outlined text-[16px]">
-                  calendar_today
-                </span>
-                Date: {reportData.date}
-              </span>
-            </div>
-          </div>
-          <div className="flex gap-3">
-            <button
-              onClick={handleExportPDF}
-              disabled={isExporting}
-              className="flex items-center gap-2 bg-primary text-white px-5 py-2.5 rounded-lg font-bold hover:bg-primary/90 transition-all shadow-lg shadow-primary/20 disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              <span className="material-symbols-outlined text-[20px]">
-                picture_as_pdf
-              </span>
-              {isExporting ? 'Exporting...' : 'Export PDF'}
-            </button>
-          </div>
-        </div>
+        <ReportHeader
+          boltName={reportData.boltName}
+          refId={reportData.refId}
+          date={reportData.date}
+          onExportPDF={handleExportPDF}
+          isExporting={isExporting}
+        />
 
         <div className="space-y-6">
-          {/* Top Row: Input Parameters and Bolt Details */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* User Input Parameters Section */}
-            <section className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 overflow-hidden shadow-sm">
-              <div className="p-5 border-b border-slate-100 dark:border-slate-800">
-                <h3 className="font-bold text-slate-900 dark:text-white flex items-center gap-2">
-                  <span className="material-symbols-outlined text-primary">
-                    tune
-                  </span>
-                  User Input Parameters
-                </h3>
-              </div>
-              <div className="p-5 grid grid-cols-1 sm:grid-cols-2 gap-3">
-                {reportData.userInputs.map((input, index) => (
-                  <div
-                    key={index}
-                    className="flex items-center justify-between p-3 bg-slate-50 dark:bg-slate-800/40 rounded border border-slate-100 dark:border-slate-800"
-                  >
-                    <span className="text-sm text-slate-500">
-                      {input.label}
-                    </span>
-                    <span className="text-sm font-bold text-slate-900 dark:text-white">
-                      {input.value}
-                    </span>
-                  </div>
-                ))}
-              </div>
-            </section>
-
-            {/* Bolt Details Section */}
-            <section className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 overflow-hidden shadow-sm">
-              <div className="p-5 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center">
-                <h3 className="font-bold text-slate-900 dark:text-white flex items-center gap-2">
-                  <span className="material-symbols-outlined text-primary">
-                    nat
-                  </span>
-                  Selected Bolt Details
-                </h3>
-              </div>
-              <div className="p-6">
-                <div className="grid grid-cols-2 gap-y-4 gap-x-6">
-                  {reportData.boltDetails.map((detail, index) => (
-                    <div key={index}>
-                      <p className="text-[11px] font-bold text-slate-400 uppercase">
-                        {detail.label}
-                      </p>
-                      <p
-                        className={`text-sm font-semibold text-slate-900 dark:text-slate-200'
-                        `}
-                      >
-                        {detail.value}
-                      </p>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </section>
+            <UserInputData userInputs={reportData.userInputs} />
+            <SelectedBolt boltDetails={reportData.boltDetails} />
           </div>
 
-          {/* Stress and Load Verification Table (Full Width) */}
-          <section className="bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-800 overflow-hidden shadow-sm">
-            <div className="p-5 border-b border-slate-100 dark:border-slate-800 flex justify-between items-center">
-              <h3 className="font-bold text-slate-900 dark:text-white flex items-center gap-2">
-                <span className="material-symbols-outlined text-primary">
-                  analytics
-                </span>
-                Stress and Load Verification
-              </h3>
-            </div>
-            <div className="overflow-x-auto">
-              <table className="w-full text-left border-collapse">
-                <thead>
-                  <tr className="bg-slate-50 dark:bg-slate-800/50">
-                    <th className="p-4 text-[11px] font-bold text-slate-400 uppercase tracking-wider">
-                      Verification Metric
-                    </th>
-                    <th className="p-4 text-[11px] font-bold text-slate-400 uppercase tracking-wider text-right">
-                      Calculated
-                    </th>
-                    <th className="p-4 text-[11px] font-bold text-slate-400 uppercase tracking-wider text-right">
-                      Limit
-                    </th>
-                    <th className="p-4 text-[11px] font-bold text-slate-400 uppercase tracking-wider">
-                      Utilization
-                    </th>
-                    <th className="p-4 text-[11px] font-bold text-slate-400 uppercase tracking-wider text-center">
-                      Status
-                    </th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-100 dark:divide-slate-800">
-                  {reportData.verification.map((row, index) => (
-                    <tr
-                      key={index}
-                      className="hover:bg-slate-50 dark:hover:bg-slate-800/30 transition-colors"
-                    >
-                      <td className="p-4">
-                        <p className="text-sm font-semibold text-slate-900 dark:text-white">
-                          {row.name}
-                        </p>
-                        <p className="text-xs text-slate-500">
-                          {row.description}
-                        </p>
-                      </td>
-                      <td className="p-4 text-right font-mono text-sm text-slate-900 dark:text-white">
-                        {row.calculated}
-                      </td>
-                      <td className="p-4 text-right font-mono text-sm text-slate-500">
-                        {row.limit}
-                      </td>
-                      <td className="p-4 min-w-[140px]">
-                        <div className="flex items-center gap-3">
-                          <div className="flex-1 h-2 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
-                            <div
-                              className={`h-full rounded-full transition-all ${
-                                row.utilization > 80
-                                  ? 'bg-rose-500'
-                                  : row.utilization > 40
-                                    ? 'bg-primary'
-                                    : 'bg-green-500'
-                              }`}
-                              style={{ width: `${row.utilization}%` }}
-                            ></div>
-                          </div>
-                          <span className="text-xs font-bold text-slate-600 dark:text-slate-400">
-                            {row.utilization}%
-                          </span>
-                        </div>
-                      </td>
-                      <td className="p-4 text-center">
-                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-bold bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400">
-                          {row.status}
-                        </span>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </section>
+          <LoadVerificationTable verification={reportData.verification} />
 
-          {/* Actions Section */}
-          <div className="flex items-center justify-start pt-4 border-t border-slate-200 dark:border-slate-800">
-            <button
-              onClick={handleBackToHistory}
-              className="flex items-center gap-2 text-slate-600 dark:text-slate-400 font-semibold hover:text-primary transition-colors py-2 px-4 group"
-            >
-              <span className="material-symbols-outlined transition-transform group-hover:-translate-x-1">
-                arrow_back
-              </span>
-              Back to History
-            </button>
-          </div>
+          <ReportCTA onBackToHistory={handleBackToHistory} />
         </div>
       </main>
 
