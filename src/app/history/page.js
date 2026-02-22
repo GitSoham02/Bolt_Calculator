@@ -6,6 +6,8 @@ import NavBar from '../components/NavBar';
 import { useResult } from '../context/ResultContext';
 // import { Router } from 'next/router';
 import { useRouter } from 'next/navigation';
+import TitleDesc from '../components/history/TitleDesc';
+import HistoryItem from '../components/history/HistoryItem';
 
 export default function HistoryPage() {
   const router = useRouter();
@@ -110,16 +112,7 @@ export default function HistoryPage() {
 
         <main className="flex-1 flex flex-col min-w-0 overflow-y-auto scrollbar-hide">
           <div className="p-4 sm:p-6 md:p-8 max-w-5xl mx-auto w-full">
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
-              <div>
-                <h2 className="text-3xl font-black tracking-tight text-slate-900 dark:text-white">
-                  Calculation History
-                </h2>
-                <p className="text-slate-500 dark:text-slate-400 mt-1">
-                  Review and manage past industrial bolt load calculations
-                </p>
-              </div>
-            </div>
+            <TitleDesc />
 
             <div className="space-y-4">
               {isLoading ? (
@@ -141,88 +134,15 @@ export default function HistoryPage() {
                   </p>
                 </div>
               ) : (
-                historyItems.map((item, index) => {
-                  // const status = getStatus(
-                  //   item.obtainedValues.tensileStress,
-                  //   item.limits.tensileStress,
-                  // );
-                  // const statusStyle = getStatusStyle(
-                  //   item.obtainedValues.tensileStress,
-                  //   item.limits.tensileStress,
-                  // );
-                  // const safetyFactor = getSafetyFactor(
-                  //   item.limits.tensileStress,
-                  //   item.obtainedValues.tensileStress,
-                  // );
-
-                  return (
-                    <div
-                      key={index}
-                      className="group bg-white dark:bg-[#2a1d17] p-6 rounded-xl border border-slate-200 dark:border-white/5 hover:border-primary/50 transition-all shadow-sm"
-                    >
-                      <div className="flex flex-col md:flex-row justify-between gap-4">
-                        <div className="flex-1">
-                          <h3 className="text-xl font-bold dark:text-white mb-1">
-                            Selected Bolt - {item.curBolt.designation}
-                          </h3>
-                          <p className="text-sm text-slate-500 dark:text-slate-400 mb-4 flex items-center gap-2">
-                            <span className="material-symbols-outlined text-base">
-                              schedule
-                            </span>
-                            {formatDate(item.userInputData.calculatedAt)}
-                          </p>
-                          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 pt-4 border-t border-slate-100 dark:border-white/5">
-                            <div>
-                              <p className="text-[10px] uppercase font-bold text-slate-400 tracking-widest">
-                                Plate Thickness
-                              </p>
-                              <p className="text-sm font-semibold dark:text-slate-200">
-                                {item.userInputData.plateThickness.toFixed(2)}{' '}
-                                mm
-                              </p>
-                            </div>
-                            <div>
-                              <p className="text-[10px] uppercase font-bold text-slate-400 tracking-widest">
-                                External Load
-                              </p>
-                              <p className="text-sm font-semibold dark:text-slate-200">
-                                {item.userInputData.externalLoad} N
-                              </p>
-                            </div>
-                            <div>
-                              <p className="text-[10px] uppercase font-bold text-slate-400 tracking-widest">
-                                Grade
-                              </p>
-                              <p className="text-sm font-semibold dark:text-slate-200">
-                                {item.curBoltProperty.className}
-                              </p>
-                            </div>
-                            <div>
-                              <p className="text-[10px] uppercase font-bold text-slate-400 tracking-widest">
-                                Bolt Diameter
-                              </p>
-                              <p className="text-sm font-semibold dark:text-slate-200">
-                                {item.curBolt.nominalDiameter} mm
-                              </p>
-                            </div>
-                          </div>
-                        </div>
-                        <div className="flex items-end">
-                          <button
-                            type="button"
-                            className={`w-full md:w-auto px-6 py-2.5 bg-primary/10 dark:bg-primary/20 text-primary hover:bg-primary hover:text-white transition-all rounded-lg text-sm font-bold flex items-center justify-center gap-2`}
-                            onClick={() => handleViewReport(index)}
-                          >
-                            View Report
-                            <span className="material-symbols-outlined text-base">
-                              arrow_forward
-                            </span>
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  );
-                })
+                historyItems.map((item, index) => (
+                  <HistoryItem
+                    key={index}
+                    item={item}
+                    index={index}
+                    formatDate={formatDate}
+                    onViewReport={handleViewReport}
+                  />
+                ))
               )}
             </div>
           </div>
